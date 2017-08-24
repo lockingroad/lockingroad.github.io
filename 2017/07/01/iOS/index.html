@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          新手快速开发iOS项目 - Demonl的博客 | Demonl&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://kaijun.rocks/hexo-theme-huxblog/2017/07/01/iOS/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Ran的代码笔记</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http://kaijun.rocks/hexo-theme-huxblog/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('post-bg-js-module.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                          <a class="tag" href="/tags/#Reactive" title="Reactive">Reactive</a>
+                        
+                    </div>
+                    <h1>新手快速开发iOS项目</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Demonl on
+                        2017-07-01
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>最近把iOS项目完成，从4月份开始学习OC，到现在还不到3个月。然而一点都高兴不起来，设想一下如果我原来是iOS开发,同样可以完成一个Android项目。然而到现在作为一个Android开发者已经快两年了，水平恐怕也只是代码搬运工。接下会加大力度在Android上，会很快忘掉这个iOS项目,记录之。</p>
+<a id="more"></a>
+<h2 id="OC多多益善"><a href="#OC多多益善" class="headerlink" title="OC多多益善"></a>OC多多益善</h2><p>书籍pdf：Objective C基础教程<br><a href="https://github.com/coolnameismy/ios-tips" target="_blank" rel="external">https://github.com/coolnameismy/ios-tips</a></p>
+<h3 id="strong和weak"><a href="#strong和weak" class="headerlink" title="strong和weak"></a>strong和weak</h3><h3 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h3><h4 id="block"><a href="#block" class="headerlink" title="block"></a>block</h4><p>TODO: </p>
+<h4 id="Notification"><a href="#Notification" class="headerlink" title="Notification"></a>Notification</h4><p>TODO:</p>
+<h4 id="protocol"><a href="#protocol" class="headerlink" title="protocol"></a>protocol</h4><p>TODO:</p>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="xcode"><a href="#xcode" class="headerlink" title="xcode"></a>xcode</h3><h4 id="热键"><a href="#热键" class="headerlink" title="热键"></a>热键</h4><p>快速打开: <code>Command + Shift + O</code><br>h and .m文件间的快速切换: <code>Control + Command + Up Arrow</code><br>运行app: <code>Command + R</code><br>清除工程: <code>Command + Shift + K</code><br>构建应用程序: <code>Command + B</code><br>在辅助编辑器中打开文件:在项目导航器中选中文件执行Option+左键点击操作<br>文件跳转栏:<code>Control+6</code><br>展示当前你在工程导航器中打开的文件:<code>Command + Shift + J</code><br>新建group: <code>Command+alt+n</code><br>新建工程: <code>Command+Shift+n</code><br>模拟器Home:<code>Command+Shift+h</code></p>
+<h4 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h4><ul>
+<li>拖拽复制的时候勾选copy itself if needed 否则只是复制的引用不会进入工程当中</li>
+<li>新建group之后关联文件路径,相关的文件操作都会和Xcode中的侧栏路径一直.</li>
+<li>当拖拽复制时,xcode出现错误有可能是文件名重复所致.</li>
+</ul>
+<h4 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h4><p><a href="http://www.jianshu.com/p/f422160d51b1" target="_blank" rel="external">http://www.jianshu.com/p/f422160d51b1</a></p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><h4 id="Podfile"><a href="#Podfile" class="headerlink" title="Podfile"></a>Podfile</h4><p>vim Podfile<br>pod install<br>pod update:当git覆盖本地的pod时有可能会出错，这时候pod install失败可尝试pod update<br>依赖：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">inhibit_all_warnings!</div><div class="line">platform :ios, '8.0'</div><div class="line">target 'huiben' do</div><div class="line"></div><div class="line">pod 'PPNetworkHelper',:git =&gt; 'https://github.com/jkpang/PPNetworkHelper.git'</div><div class="line">pod 'SWTableViewCell', '~&gt; 0.3.7'</div><div class="line">use_frameworks!</div><div class="line">pod 'ReactiveObjC'</div><div class="line">end</div></pre></td></tr></table></figure></p>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><p><img src="http://oseklscmm.bkt.clouddn.com/demon/ios/xcode.png" alt="xcode"></p>
+<h3 id="libs-非pod"><a href="#libs-非pod" class="headerlink" title="libs(非pod)"></a>libs(非pod)</h3><h4 id="CoreModel"><a href="#CoreModel" class="headerlink" title="CoreModel"></a>CoreModel</h4><p>基于sqlite的数据存储框架，封装了繁琐的sql语句，包装成对象。</p>
+<h4 id="RSKImageCropper"><a href="#RSKImageCropper" class="headerlink" title="RSKImageCropper"></a>RSKImageCropper</h4><p>图像裁剪</p>
+<h4 id="DFSegment"><a href="#DFSegment" class="headerlink" title="DFSegment"></a>DFSegment</h4><p>滚动的菜单栏</p>
+<h3 id="base"><a href="#base" class="headerlink" title="base"></a>base</h3><h4 id="UINavigationController的基类"><a href="#UINavigationController的基类" class="headerlink" title="UINavigationController的基类"></a>UINavigationController的基类</h4><p>封装手势返回操作，UINavigationBar的颜色，push之后的返回。<br>bug：扩展中Runtime的导致基类的侧滑退出控制失效。<br>TODO: 其他</p>
+<h3 id="view"><a href="#view" class="headerlink" title="view"></a>view</h3><h4 id="StarView"><a href="#StarView" class="headerlink" title="StarView"></a>StarView</h4><p>自定义的view实现星级条<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">UIView</span> *)buidlStarViewWithImageName:(<span class="built_in">NSString</span> *)imageName</div><div class="line">&#123;</div><div class="line">    <span class="built_in">CGRect</span> frame = <span class="keyword">self</span>.bounds;</div><div class="line">    <span class="built_in">UIView</span> *view = [[<span class="built_in">UIView</span> alloc] initWithFrame:frame];</div><div class="line">    view.clipsToBounds = <span class="literal">YES</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">self</span>.starCount; i ++)&#123;</div><div class="line">        <span class="built_in">UIImageView</span> *imageView = [[<span class="built_in">UIImageView</span> alloc] initWithImage:[<span class="built_in">UIImage</span> imageNamed:imageName]];</div><div class="line">        imageView.frame = <span class="built_in">CGRectMake</span>(kStarMargin+(i * frame.size.width)/<span class="keyword">self</span>.starCount, <span class="number">0</span>, frame.size.width/<span class="keyword">self</span>.starCount - kStarMargin,frame.size.width/<span class="keyword">self</span>.starCount - kStarMargin);</div><div class="line">        [view addSubview:imageView];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> view;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="TextView"><a href="#TextView" class="headerlink" title="TextView"></a>TextView</h4><p>TODO:</p>
+<h4 id="ToolBar"><a href="#ToolBar" class="headerlink" title="ToolBar"></a>ToolBar</h4><h3 id="manger"><a href="#manger" class="headerlink" title="manger"></a>manger</h3><h4 id="Manager"><a href="#Manager" class="headerlink" title="Manager"></a>Manager</h4><p>封装网络操作，高频操作，添加到预编译文件中。<br>静态方法便于调用,如:<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//首页列表</span></div><div class="line">+(<span class="keyword">void</span>)getCartoonEntity:(<span class="built_in">NSInteger</span>)page</div><div class="line">                titleID:(<span class="built_in">NSString</span> *)functions</div><div class="line">         successHandler:(<span class="keyword">void</span>(^)(CartoonEntity *entity))success</div><div class="line">         failureHandler:(FailureHandler)failure;</div></pre></td></tr></table></figure></p>
+<h4 id="Helper"><a href="#Helper" class="headerlink" title="Helper"></a>Helper</h4><p>封装存储操作：token存储，便于使用；UID存储，用于数据库。</p>
+<h3 id="model"><a href="#model" class="headerlink" title="model"></a>model</h3><p>实体类<br>用于Json解析的实体类:CartoonEntity<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">CartoonEntity</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">assign</span>)<span class="built_in">BOOL</span> status;</div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">strong</span>)<span class="built_in">NSArray</span> *data;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>对象嵌套对象的方法，属性名称和实体类名称要对应。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">CartoonEntity</span></span></div><div class="line">+(<span class="built_in">NSDictionary</span> *)mj_objectClassInArray</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> @&#123;</div><div class="line">             <span class="string">@"data"</span> : <span class="string">@"CartoonsInfo"</span></div><div class="line">             &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="other"><a href="#other" class="headerlink" title="other"></a>other</h3><h3 id="预编译"><a href="#预编译" class="headerlink" title="预编译"></a>预编译</h3><p>根据16进制取颜色值:<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#define kUIColorFromRGB(rgbValue) [UIColor                \</span></div><div class="line">colorWithRed:((<span class="keyword">float</span>)((rgbValue &amp; <span class="number">0xFF0000</span>) &gt;&gt; <span class="number">16</span>))/<span class="number">255.0</span> \</div><div class="line">green:((<span class="keyword">float</span>)((rgbValue &amp; <span class="number">0xFF00</span>) &gt;&gt; <span class="number">8</span>))/<span class="number">255.0</span>           \</div><div class="line">blue:((<span class="keyword">float</span>)(rgbValue &amp; <span class="number">0xFF</span>))/<span class="number">255.0</span> alpha:<span class="number">1.0</span>]</div><div class="line"></div><div class="line"><span class="meta">#define kUIColorFromRGBA(rgbValue,al) [UIColor                \</span></div><div class="line">colorWithRed:((<span class="keyword">float</span>)((rgbValue &amp; <span class="number">0xFF0000</span>) &gt;&gt; <span class="number">16</span>))/<span class="number">255.0</span> \</div><div class="line">green:((<span class="keyword">float</span>)((rgbValue &amp; <span class="number">0xFF00</span>) &gt;&gt; <span class="number">8</span>))/<span class="number">255.0</span>           \</div><div class="line">blue:((<span class="keyword">float</span>)(rgbValue &amp; <span class="number">0xFF</span>))/<span class="number">255.0</span> alpha:al]</div></pre></td></tr></table></figure></p>
+<p>font设置(注意:没有字体文件时有可能崩溃)<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/***  普通字体 */</span></div><div class="line"><span class="meta">#define kFont(size) [UIFont systemFontOfSize:size]</span></div><div class="line"><span class="comment">/***  粗体 */</span></div><div class="line"><span class="meta">#define kBoldFont(size) [UIFont boldSystemFontOfSize:size]</span></div><div class="line"><span class="meta">#define BTFont(_size_) [UIFont fontWithName:@<span class="meta-string">"FZLanTingHei-L-GBK"</span> size:_size_]</span></div></pre></td></tr></table></figure></p>
+<p>设备型号<br>屏幕尺寸<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#define kScreen_Height   ([UIScreen mainScreen].bounds.size.height)</span></div><div class="line"><span class="meta">#define kScreen_Width    ([UIScreen mainScreen].bounds.size.width)</span></div></pre></td></tr></table></figure></p>
+<p>常用颜色数值<br>存储：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#define UserDefaults                        [NSUserDefaults standardUserDefaults]</span></div></pre></td></tr></table></figure></p>
+<h3 id="类别和扩展"><a href="#类别和扩展" class="headerlink" title="类别和扩展"></a>类别和扩展</h3><ul>
+<li>scrollview内容为空时的显示</li>
+<li>16进制显示颜色</li>
+<li>根据颜色返回UIImage</li>
+<li>UIImageview加边框,显示网络图片</li>
+<li>设置行间距,文字最大宽度</li>
+<li>UIBarButtonItem的图片设置</li>
+<li>view的长宽值</li>
+</ul>
+<h3 id="page"><a href="#page" class="headerlink" title="page"></a>page</h3><p>页面</p>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><p>image的名称设置和源文件没有关系.</p>
+<h3 id="pod"><a href="#pod" class="headerlink" title="pod"></a>pod</h3><p>有时候顺序导致pod失败.比如某个库默认引用masonry,但是实际提供的masonry是另外的版本.</p>
+<h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><h3 id="UI"><a href="#UI" class="headerlink" title="UI"></a>UI</h3><h4 id="UINavigationController"><a href="#UINavigationController" class="headerlink" title="UINavigationController"></a>UINavigationController</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="built_in">CGSizeMake</span>(<span class="number">30</span>, <span class="number">30</span>), <span class="literal">NO</span>, <span class="number">0.0</span>);</div><div class="line">    [[<span class="built_in">UIColor</span> redColor]set];</div><div class="line">    <span class="built_in">UIRectFill</span>(<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">50</span>, <span class="number">50</span>));</div><div class="line">    <span class="built_in">UIImage</span> *bgImg=<span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</div><div class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</div><div class="line">    [<span class="keyword">self</span>.navigationController.navigationBar setBackgroundImage:bgImg forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</div></pre></td></tr></table></figure>
+<p>TODO: 背景设置</p>
+<h4 id="UIViewController"><a href="#UIViewController" class="headerlink" title="UIViewController"></a>UIViewController</h4><h4 id="UITableView"><a href="#UITableView" class="headerlink" title="UITableView"></a>UITableView</h4><h5 id="Cell高度自适应"><a href="#Cell高度自适应" class="headerlink" title="Cell高度自适应"></a>Cell高度自适应</h5><p><a href="https://github.com/forkingdog/UITableView-FDTemplateLayoutCell" target="_blank" rel="external">https://github.com/forkingdog/UITableView-FDTemplateLayoutCell</a><br>项目并没有用到，解决headview的高度不定问题，暂时先解决headview。</p>
+<h5 id="下拉刷新和上拉加载"><a href="#下拉刷新和上拉加载" class="headerlink" title="下拉刷新和上拉加载"></a>下拉刷新和上拉加载</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">tableView.mj_header=[MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">    [weakSelf loadDataFromStart:<span class="literal">YES</span>];   </div><div class="line"> &#125;];</div><div class="line">tableView.mj_footer=[MJRefreshBackNormalFooter footerWithRefreshingBlock:^&#123;</div><div class="line">    [weakSelf loadDataFromStart:<span class="literal">NO</span>];</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>对于上拉下拉的网络请求的一般实现：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">-(<span class="keyword">void</span>)loadDataFromStart:(<span class="built_in">BOOL</span>)boolean</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span>(boolean)&#123;</div><div class="line">        <span class="keyword">self</span>.page=<span class="number">1</span>;</div><div class="line">        [<span class="keyword">self</span>.dataArray removeAllObjects];</div><div class="line">    &#125;</div><div class="line">    [CartoonManager getCartoonEntity:<span class="keyword">self</span>.page</div><div class="line">                             titleID:_titleID</div><div class="line">                      successHandler:^(CartoonEntity *entity) &#123;</div><div class="line">                          [<span class="keyword">self</span> refreshUpdateUI];</div><div class="line">                          <span class="keyword">if</span>(entity.data.count==<span class="number">0</span>)&#123;</div><div class="line">                              [<span class="keyword">self</span>.tableView reloadData];</div><div class="line">                              <span class="keyword">return</span> ;</div><div class="line">                          &#125;</div><div class="line">                          [<span class="keyword">self</span>.dataArray addObjectsFromArray:entity.data];</div><div class="line">                          <span class="keyword">self</span>.page++;</div><div class="line">                         [<span class="keyword">self</span>.tableView reloadData];</div><div class="line">                      &#125; failureHandler:^(<span class="built_in">NSError</span> *error) &#123;</div><div class="line">                          <span class="built_in">NSLog</span>(<span class="string">@"失败了"</span>);</div><div class="line">                          </div><div class="line">                      &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>判断entity.data.count==0，进行一次reloadData，是要刷新显示空数据展示。(<a href="https://github.com/dzenbot/DZNEmptyDataSet" target="_blank" rel="external">EmptyDataSet</a>)</p>
+<h5 id="头部"><a href="#头部" class="headerlink" title="头部"></a>头部</h5><p><img src="http://oseklscmm.bkt.clouddn.com/demon/ios/detail.png" alt="detail"><br>headview包含webview和高度不一定的label。等待webview加载完成后需要，重新计算一下高度。headview用masonry布局，需要在添加到tableview的时候进行。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">-(HeadView *)topView</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span>(!_topView)&#123;</div><div class="line">        _topView=[[HeadView alloc]init];</div><div class="line">        [_tableView setTableHeaderView:_topView];</div><div class="line">        [_topView mas_makeConstraints:^(MASConstraintMaker *make) &#123;</div><div class="line">            make.width.mas_equalTo(<span class="keyword">self</span>.view.mas_width);</div><div class="line">        &#125;];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> _topView;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>网络请求返回成功需要更新UI的时候<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">MJWeakSelf</div><div class="line">   <span class="keyword">self</span>.topView.viewBlock = ^(<span class="built_in">CGFloat</span> f) &#123;</div><div class="line">       <span class="built_in">NSLog</span>(<span class="string">@"hei----%f"</span>,f);</div><div class="line">       <span class="built_in">CGRect</span> newFrame = weakSelf.topView.frame;</div><div class="line">       newFrame.size.height = newFrame.size.height + f/<span class="number">2</span>;</div><div class="line">       weakSelf.topView.frame = newFrame;</div><div class="line">       [weakSelf.tableView setTableHeaderView: weakSelf.topView];</div><div class="line">   &#125;;</div></pre></td></tr></table></figure></p>
+<p>回调是webview请求完成时候进行的，这个时候说明headview的高度已经确定不会变化了。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">-(<span class="keyword">void</span>)webViewDidFinishLoad:(<span class="built_in">UIWebView</span> *)webView</div><div class="line">&#123;</div><div class="line">    </div><div class="line">    <span class="built_in">CGFloat</span> height = [[webView stringByEvaluatingJavaScriptFromString:<span class="string">@"document.body.offsetHeight"</span>] floatValue];</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"hei--&gt;%f"</span>,height);</div><div class="line">    [_web mas_updateConstraints:^(MASConstraintMaker *make) &#123;</div><div class="line">        make.height.offset(height);</div><div class="line">        </div><div class="line">    &#125;];</div><div class="line">    <span class="keyword">self</span>.viewBlock(height);<span class="comment">//webview绘制完成的时候 进行一次回调</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>TODO: why f/2?</p>
+<h4 id="Masonry"><a href="#Masonry" class="headerlink" title="Masonry"></a>Masonry</h4><p>限定住cell或view的高度,line2是这个view中的最底部<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.line2 mas_makeConstraints:^(MASConstraintMaker *make) &#123;</div><div class="line">    make.height.mas_equalTo(@<span class="number">1</span>);</div><div class="line">    make.left.right.mas_equalTo(weakSelf);</div><div class="line">    make.top.equalTo(weakSelf.commentLa.mas_bottom).offset(<span class="number">5</span>);</div><div class="line">    make.bottom.mas_equalTo(weakSelf.mas_bottom);</div><div class="line">&#125;];</div></pre></td></tr></table></figure></p>
+<p>TODO: lessthan</p>
+<h5 id="合适的结构"><a href="#合适的结构" class="headerlink" title="合适的结构"></a>合适的结构</h5><h6 id="分离"><a href="#分离" class="headerlink" title="分离"></a>分离</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(<span class="keyword">self</span>=[<span class="keyword">super</span> init])&#123;</div><div class="line">        [<span class="keyword">self</span> setupView];</div><div class="line">        [<span class="keyword">self</span> setupConstraints];</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>把初始化和约束布局分离开来，看起来结构分明。但是访问不到另一个方法的局部变量，要用self来表示，这样所有的控件都要声明为property，对于一些操作较少的控件，这样并不合理。而且代码量多后，更改约束和更改UI都要进行，不方便。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">-(<span class="keyword">void</span>)setupView&#123;</div><div class="line">    [<span class="keyword">self</span>.view addSubview:<span class="keyword">self</span>.mainScroll];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.userSetingtext];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.btnlogout];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.settingImage];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.setingLine];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.clearLine];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.clearText];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.removeImage];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.userName];</div><div class="line">    [_mainScroll addSubview:<span class="keyword">self</span>.headImage];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>TODO: 代码避免</p>
+<h6 id="同时初始化和布局"><a href="#同时初始化和布局" class="headerlink" title="同时初始化和布局"></a>同时初始化和布局</h6><h5 id="tips"><a href="#tips" class="headerlink" title="tips"></a>tips</h5><p>固定的界面放到scrollview中。</p>
+<h4 id="UIWebView"><a href="#UIWebView" class="headerlink" title="UIWebView"></a>UIWebView</h4><p>TODO：高度<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">CGFloat</span> height = [[webView stringByEvaluatingJavaScriptFromString:<span class="string">@"document.body.offsetHeight"</span>] floatValue];</div></pre></td></tr></table></figure></p>
+<h4 id="UILabel"><a href="#UILabel" class="headerlink" title="UILabel"></a>UILabel</h4><p>多行<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mContent.numberOfLines=<span class="number">0</span>;</div></pre></td></tr></table></figure></p>
+<h4 id="UIImageView"><a href="#UIImageView" class="headerlink" title="UIImageView"></a>UIImageView</h4><p>圆角带边框<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.headImage fadeImageWithUrl:<span class="keyword">self</span>.data.headimg place:<span class="string">@"default_headImg"</span> complete:^&#123;</div><div class="line"><span class="comment">//        self.headImage.image=[self.headImage.image circleBorderWidth:2 borderColor:Global_Blue_Color];</span></div><div class="line"><span class="comment">//        [self.headImage updateConstraints];//这种设置会变成扁的</span></div><div class="line">        weakSelf.headImage.layer.cornerRadius=weakSelf.headImage.frame.size.width/<span class="number">2</span>;</div><div class="line">        weakSelf.headImage.clipsToBounds=<span class="literal">YES</span>;</div><div class="line">        weakSelf.headImage.layer.borderWidth = <span class="number">1.0</span>f;</div><div class="line">        weakSelf.headImage.layer.borderColor = Global_Blue_Color.CGColor;</div><div class="line">    &#125;];</div></pre></td></tr></table></figure></p>
+<p>fadeImageWithUrl会改变imageview，这里需要重新设置。</p>
+<h3 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h3><h4 id="gcd"><a href="#gcd" class="headerlink" title="gcd"></a>gcd</h4><p><em>delay</em><br>刷新空数据的显示有的时候需要滞后，否则没效果。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(!<span class="keyword">self</span>.data.count)&#123;</div><div class="line">            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="number">1</span> * <span class="built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^&#123;</div><div class="line">                [<span class="keyword">self</span>.tableView reloadData];</div><div class="line">                </div><div class="line">            &#125;);</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p><em>切换主线程</em><br>利用CoreModel查询数据库，返回的数据的block不是在主线程中，需要切换至主线程。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">[CartoonManager delDetail:entity.hostID successHandler:^(<span class="built_in">BOOL</span> res) &#123;</div><div class="line">        <span class="keyword">if</span>(res)&#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"删除成功了"</span>);</div><div class="line">            <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</div><div class="line">                [_data removeObjectAtIndex:path.row];</div><div class="line">                <span class="built_in">dispatch_sync</span>(dispatch_get_main_queue(), ^&#123;</div><div class="line">                    [<span class="keyword">self</span>.tableView deleteRowsAtIndexPaths:@[path] withRowAnimation:<span class="built_in">UITableViewRowAnimationLeft</span>];</div><div class="line">                    <span class="keyword">if</span>(!_data.count)&#123;</div><div class="line">                        [<span class="keyword">self</span>.tableView reloadData];</div><div class="line">                    &#125;</div><div class="line">                &#125;);</div><div class="line">                </div><div class="line">            &#125;);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">    &#125; failure:^(<span class="built_in">NSError</span> *error) &#123;</div><div class="line">        </div><div class="line">        </div><div class="line">    &#125;];</div></pre></td></tr></table></figure></p>
+<h4 id="ReactiveCocoas"><a href="#ReactiveCocoas" class="headerlink" title="ReactiveCocoas"></a>ReactiveCocoas</h4><p>TODO： 更多使用</p>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><h4 id="post"><a href="#post" class="headerlink" title="post"></a>post</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">+(<span class="keyword">void</span>)getDetailEntity:(<span class="built_in">NSString</span> *)cartoonID token:(<span class="built_in">NSString</span> *)token successHandler:(<span class="keyword">void</span>(^)(DetailEntity *))success failureHandler:(FailureHandler)failure</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSMutableDictionary</span> *params=[[<span class="built_in">NSMutableDictionary</span> alloc]init];</div><div class="line">    [params setObject:cartoonID forKey:<span class="string">@"id"</span>];</div><div class="line">    [params setObject:token forKey:<span class="string">@"token"</span>];</div><div class="line">    </div><div class="line">    </div><div class="line">    [PPNetworkHelper POST:<span class="string">@"url"</span> parameters:params success:^(<span class="keyword">id</span> responseObject) &#123;</div><div class="line">        <span class="keyword">if</span>(responseObject)&#123;</div><div class="line">            DetailEntity *entity=[DetailEntity mj_objectWithKeyValues:responseObject[<span class="string">@"data"</span>]];</div><div class="line">            success(entity);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">    &#125; failure:^(<span class="built_in">NSError</span> *error) &#123;</div><div class="line">        </div><div class="line">        </div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="图片上传"><a href="#图片上传" class="headerlink" title="图片上传"></a>图片上传</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)updateHeadImageWithImage:(<span class="built_in">UIImage</span> *)headImage&#123;</div><div class="line">    </div><div class="line">    [SVProgressHUD show];</div><div class="line">    <span class="built_in">NSString</span> *token2=[CartoonHelper getToken];</div><div class="line">    <span class="built_in">NSMutableDictionary</span> *params=[<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line">    params[<span class="string">@"token"</span>]=token2;</div><div class="line">    <span class="built_in">NSString</span> *str2=<span class="string">@"url"</span>;</div><div class="line">    TJPSessionManager *manager=[[TJPSessionManager alloc]init];</div><div class="line">    [manager uploadWithImage:headImage urlStr:str2 filename:<span class="literal">nil</span> name:<span class="string">@"headimg"</span> mimeType:<span class="string">@"image/jpeg"</span> parameters:params progress:^(int64_t bytesWritten, int64_t totalBytesWritten) &#123;</div><div class="line">        </div><div class="line">        </div><div class="line">    &#125; resultBlock:^(<span class="keyword">id</span> responseObject, <span class="built_in">NSError</span> *error) &#123;</div><div class="line">        [SVProgressHUD dismiss];</div><div class="line">        SimpleEntity *entity=[SimpleEntity mj_objectWithKeyValues:responseObject];</div><div class="line">        <span class="keyword">if</span>(entity.status)&#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"返回--&gt;%@"</span>,responseObject);</div><div class="line">            [<span class="keyword">self</span> loadData];</div><div class="line">            [<span class="keyword">self</span> sendNotify];</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"返回错误了--&gt;%@"</span>,entity);</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>TODO: 用ppnetworker上传失败（设置responseSerializer）请求头 json化</p>
+<h2 id="杂"><a href="#杂" class="headerlink" title="杂"></a>杂</h2><p>具体分类暂时难以分类归纳，只能都放在这了。</p>
+<h3 id="渐变navigationbar"><a href="#渐变navigationbar" class="headerlink" title="渐变navigationbar"></a>渐变navigationbar</h3><p>TODO: </p>
+<h3 id="键盘收起"><a href="#键盘收起" class="headerlink" title="键盘收起"></a>键盘收起</h3><p>TODO:</p>
+<h3 id="音频播放"><a href="#音频播放" class="headerlink" title="音频播放"></a>音频播放</h3><p>TODO:</p>
+<h3 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h3><p>TODO:</p>
+<h3 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h3><p>TODO:</p>
+<h2 id="依赖库"><a href="#依赖库" class="headerlink" title="依赖库"></a>依赖库</h2><h3 id="CoreMode"><a href="#CoreMode" class="headerlink" title="CoreMode"></a>CoreMode</h3><p><em>insert</em><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[DetailEntityStore insert:storeEntity resBlock:^(BOOL res) &#123;</div><div class="line">                            NSLog(@&quot;成功了%d&quot;,res);</div><div class="line">                        &#125;];</div></pre></td></tr></table></figure></p>
+<p><em>delete</em><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[DetailEntityStore delete:hostid resBlock:^(<span class="built_in">BOOL</span> res) &#123;</div><div class="line">        success(res);</div><div class="line">    &#125;];</div></pre></td></tr></table></figure></p>
+<p><em>select</em><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *whereArg=[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"USERID LIKE '%@'"</span>,arg];</div><div class="line">   [DetailEntityStore selectWhere:whereArg groupBy:<span class="literal">nil</span> orderBy:<span class="literal">nil</span> limit:<span class="literal">nil</span> selectResultsBlock:^(<span class="built_in">NSArray</span> *selectResults) &#123;</div><div class="line">       <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,selectResults);</div><div class="line">       success(selectResults);</div><div class="line">   &#125;];</div></pre></td></tr></table></figure></p>
+<h3 id="SWTableViewCell"><a href="#SWTableViewCell" class="headerlink" title="SWTableViewCell"></a>SWTableViewCell</h3><p><a href="https://github.com/CEWendel/SWTableViewCell" target="_blank" rel="external">https://github.com/CEWendel/SWTableViewCell</a><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cell.rightUtilityButtons=[<span class="keyword">self</span> rightButtons];</div><div class="line">cell.delegate=<span class="keyword">self</span>;</div><div class="line">-(<span class="keyword">void</span>)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(<span class="built_in">NSInteger</span>)index&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="必要的资料"><a href="#必要的资料" class="headerlink" title="必要的资料"></a>必要的资料</h2><p><a href="https://github.com/Tim9Liu9/TimLiu-iOS" target="_blank" rel="external">https://github.com/Tim9Liu9/TimLiu-iOS</a><br><a href="https://github.com/Aufree/trip-to-iOS" target="_blank" rel="external">https://github.com/Aufree/trip-to-iOS</a><br><a href="https://github.com/dkhamsing/open-source-ios-apps" target="_blank" rel="external">https://github.com/dkhamsing/open-source-ios-apps</a></p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017/07/08/RxJava2/" data-toggle="tooltip" data-placement="top" title="RxJava的Rx有几种写法（应用篇）">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/06/27/rxjava总结/" data-toggle="tooltip" data-placement="top" title="RxJava的“Rx”有几种写法(基础篇)">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                          <a class="tag" href="/tags/#Reactive" title="Reactive">Reactive</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://blog.piasy.com/" target="_blank">piasy&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.zhaiyifan.cn/" target="_blank">markzhai&#39;s Blog</a></li>
+                    
+                        <li><a href="http://chiuki.github.io/" target="_blank">*魔王&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Bar</a></li>
+                    
+                        <li><a href="#" target="_blank">Example Friends</a></li>
+                    
+                        <li><a href="#" target="_blank">It helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "dagger2";
+    var disqus_identifier = "http://kaijun.rocks/hexo-theme-huxblog/2017/07/01/iOS/";
+    var disqus_url = "http://kaijun.rocks/hexo-theme-huxblog/2017/07/01/iOS/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/liuranlzz">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/lockingroad">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/刘冉图森破">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/ran.liu.50951">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lockingroad">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/ran-liu-a73244125">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Ran的代码笔记 2017 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://kaijun.rocks/hexo-theme-huxblog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="http://kaijun.rocks/hexo-theme-huxblog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          RxJava的“Rx”有几种写法(基础篇) - Demonl的博客 | Demonl&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://kaijun.rocks/hexo-theme-huxblog/2017/06/27/rxjava总结/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Ran的代码笔记</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http://kaijun.rocks/hexo-theme-huxblog/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('pathway.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#RxJava" title="RxJava">RxJava</a>
+                        
+                    </div>
+                    <h1>RxJava的“Rx”有几种写法(基础篇)</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Demonl on
+                        2017-06-27
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>正如<em>茴香豆中茴的写法</em>一样，本文的用意也是想多多总结RxJava，当然总结在其次，现在只是吸收为主。这里借这个抖机灵的题目，激励下自己，好好吸收RxJava中的精神要义，认真的做一件事。以后这篇文章会不断完善，不会局限在过度的刨根问底上。<br><a id="more"></a></p>
+<h2 id="API原理相关"><a href="#API原理相关" class="headerlink" title="API原理相关"></a>API原理相关</h2><p>响应式编程是一种基于异步操作流概念的编程模式。Rx是.Net的一个响应式扩展。Rx借助可观测的序列提供一种简单的方式来创建异步，基于事件驱动。<br><em>相对于经典的观察者模式</em>RxJava添加了三个缺少的功能：</p>
+<ul>
+<li>完成的信号通知</li>
+<li>错误的信号通知</li>
+<li>RxJava能够组合而不会嵌套，结构简洁</li>
+</ul>
+<h3 id="概略"><a href="#概略" class="headerlink" title="概略"></a>概略</h3><p>RxJava世界的4个实体：</p>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Observable</td>
+<td>生产（事件）被观察</td>
+</tr>
+<tr>
+<td>Subject</td>
+<td>生产（事件）被观察</td>
+</tr>
+<tr>
+<td>Observer</td>
+<td>消费（事件）观察</td>
+</tr>
+<tr>
+<td>Subscriber</td>
+<td>消费（事件）观察</td>
+</tr>
+</tbody>
+</table>
+<h3 id="关于subject"><a href="#关于subject" class="headerlink" title="关于subject"></a>关于subject</h3><p>Subject=Observable+observer<br>包括：</p>
+<ul>
+<li>PublishSubject:连接observable同时可被观测的实体</li>
+<li>BehaviorSubject:</li>
+<li>ReplaySubject:</li>
+<li>AsyncSubject:</li>
+</ul>
+<h4 id="PublishSubject"><a href="#PublishSubject" class="headerlink" title="PublishSubject"></a>PublishSubject</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">PublishSubject&lt;String&gt; p1 = PublishSubject.create();</div><div class="line">        p1.subscribe(<span class="keyword">new</span> Observer&lt;String&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSubscribe</span><span class="params">(@NonNull Disposable d)</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(@NonNull String s)</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(@NonNull Throwable e)</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">       	p1.onNext(<span class="string">"next"</span>);</div></pre></td></tr></table></figure>
+<h4 id="BehaviorSubject"><a href="#BehaviorSubject" class="headerlink" title="BehaviorSubject"></a>BehaviorSubject</h4><p>首先向他的订阅者发送截止订阅前最新的一个数据（或初始值），然后正常发送数据流。</p>
+<h4 id="ReplaySubject"><a href="#ReplaySubject" class="headerlink" title="ReplaySubject"></a>ReplaySubject</h4><p>缓存所有的数据并向任意一个订阅的观察者重发。</p>
+<h4 id="AsyncSubject"><a href="#AsyncSubject" class="headerlink" title="AsyncSubject"></a>AsyncSubject</h4><p>只会发布最后一个数据给已经订阅的每一个观察者。</p>
+<h3 id="一些tips"><a href="#一些tips" class="headerlink" title="一些tips"></a>一些tips</h3><p>RxAndroid的widgetObservable和lifecycleObserverable</p>
+<h2 id="具体使用"><a href="#具体使用" class="headerlink" title="具体使用"></a>具体使用</h2><h3 id="基本功能"><a href="#基本功能" class="headerlink" title="基本功能"></a>基本功能</h3><h4 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">5</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>);</div><div class="line">List&lt;AppInfo&gt; appInfos = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppInfo</span> </span>&#123;</div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="title">AppInfo</span><span class="params">(List&lt;String&gt; tags, String name, <span class="keyword">int</span> price)</span> </span>&#123;</div><div class="line">       <span class="keyword">this</span>.tags = tags;</div><div class="line">       <span class="keyword">this</span>.name = name;</div><div class="line">       <span class="keyword">this</span>.price = price;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   <span class="keyword">public</span> List&lt;String&gt; tags;</div><div class="line">   <span class="keyword">public</span> String name;</div><div class="line">   <span class="keyword">public</span> <span class="keyword">int</span> price;</div><div class="line"> &#125;</div><div class="line"><span class="function"><span class="keyword">public</span> AppInfo <span class="title">createAppInfo</span><span class="params">(AppInfo info, Integer i)</span> </span>&#123;</div><div class="line">   info.price = i;</div><div class="line">   <span class="keyword">return</span> info;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> AppInfo <span class="title">createAppInfoLong</span><span class="params">(AppInfo info, Long l)</span> </span>&#123;</div><div class="line">   <span class="keyword">return</span> createAppInfo(info, l.intValue());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="just"><a href="#just" class="headerlink" title="just"></a>just</h4><p>just() 可变参数发送具体事件。</p>
+<h4 id="take"><a href="#take" class="headerlink" title="take"></a>take</h4><p>take(2)表示take的前2个而不是第二个！<br><img src="http://oseklscmm.bkt.clouddn.com/demon/rxjava/take.png" alt="take"></p>
+<h4 id="repeat"><a href="#repeat" class="headerlink" title="repeat"></a>repeat</h4><p>repeat() 重复发送</p>
+<h4 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h4><p>defer() 推迟到观察者订阅<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">defer</span><span class="params">()</span> </span>&#123;</div><div class="line">    Observable&lt;Integer&gt; deffered = Observable.defer(<span class="keyword">this</span>::getInt);</div><div class="line">    deffered.subscribe(integer -&gt; Log.e(TAG, <span class="string">"defer: "</span> + integer));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> Observable&lt;Integer&gt; <span class="title">getInt</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> Observable.create(</div><div class="line">            e -&gt; &#123;e.onNext(<span class="number">42</span>);e.onComplete();&#125;</div><div class="line">    );</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="range"><a href="#range" class="headerlink" title="range"></a>range</h4><p>arg1：起点<br>arg2：发射的个数</p>
+<h3 id="过滤"><a href="#过滤" class="headerlink" title="过滤"></a>过滤</h3><h4 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h4><p>把处理前的数据掩盖掉，专注于过滤的操作。开始做到了数据和操作的分离。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Observable.fromIterable(list)</div><div class="line">                .filter((integer) -&gt; integer &gt; <span class="number">2</span>)</div><div class="line">                .subscribe(integer -&gt; Log.e(TAG, <span class="string">"filter: "</span> + integer));</div></pre></td></tr></table></figure></p>
+<h4 id="distinct和distinctUntilChanged"><a href="#distinct和distinctUntilChanged" class="headerlink" title="distinct和distinctUntilChanged()"></a>distinct和distinctUntilChanged()</h4><p>去重<br>TODO: distinctUntilChanged相关</p>
+<h4 id="sample和debounce"><a href="#sample和debounce" class="headerlink" title="sample和debounce"></a>sample和debounce</h4><p>sampling()指定间隔发射最近一次的值。<br><img src="http://oseklscmm.bkt.clouddn.com/demon/rxjava/smaple.png" alt="sample"><br>debounce()如果一个指定的时间间隔过去了仍旧没有发射一个，那么发射最后的那个。<br><img src="http://oseklscmm.bkt.clouddn.com/demon/rxjava/debounce.png" alt="debounce"></p>
+<h4 id="timeout"><a href="#timeout" class="headerlink" title="timeout"></a>timeout</h4><p>监听源序列，在设定的时间间隔内没得到则发射错误</p>
+<h3 id="变换"><a href="#变换" class="headerlink" title="变换"></a>变换</h3><h4 id="map-flatmap-concatmap-和flatmapIterable"><a href="#map-flatmap-concatmap-和flatmapIterable" class="headerlink" title="map flatmap concatmap 和flatmapIterable"></a>map flatmap concatmap 和flatmapIterable</h4><p><em>flatmap</em><br>这样一个observable：发射一个数据序列，这个序列本身又可以发射observable，即铺平序列。但是顺序会交叉<br><em>concatmap</em><br>同flatmap但是顺序不会交叉<br><em>flatmpiterable</em><br>发射的数据序列铺平成了多个数据而不是observable（flatmap）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Observable.fromIterable(appInfos)</div><div class="line">                .flatMapIterable(<span class="keyword">new</span> Function&lt;AppInfo, Iterable&lt;String&gt;&gt;() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> Iterable&lt;String&gt; <span class="title">apply</span><span class="params">(@NonNull AppInfo appInfo)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                        <span class="keyword">return</span> appInfo.tags;</div><div class="line">                    &#125;</div><div class="line">                &#125;).subscribe(s -&gt; Log.e(TAG, <span class="string">"flatmapIterable: tag"</span> + s));</div></pre></td></tr></table></figure></p>
+<h4 id="scan"><a href="#scan" class="headerlink" title="scan"></a>scan</h4><p>累积函数，对原始的observable发射每一项数据应用于一个函数，计算函数结果，并将该值填充返回到可观测的序列<br><em>累加</em><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Observable.fromIterable(list)</div><div class="line">                .scan(((sum, item) -&gt; sum + item))</div><div class="line">                .subscribe(integer -&gt; Log.e(TAG, <span class="string">"scan: "</span> + integer));</div></pre></td></tr></table></figure></p>
+<p>每次发送integer都会被累加 并返回值为sum 变量伴随这个函数而不是每次发送都初始化 所以是累加<br><em>排序</em><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//TODO</span></div></pre></td></tr></table></figure></p>
+<p>TODO: 如何实现排序？</p>
+<h4 id="buffer和window"><a href="#buffer和window" class="headerlink" title="buffer和window"></a>buffer和window</h4><p>buffer（count，skip）<br>每skip项数据，填充count项数据<br><img src="http://oseklscmm.bkt.clouddn.com/demon/rxjava/buffer.png" alt="buffer"><br>window同buffer但是发射的是observable而不是iterable<br><img src="http://oseklscmm.bkt.clouddn.com/demon/rxjava/window.png" alt="window"></p>
+<h3 id="组合observable"><a href="#组合observable" class="headerlink" title="组合observable"></a>组合observable</h3><h4 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; reverseList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        Observable&lt;Integer&gt; o1 = Observable.fromIterable(reverseList);</div><div class="line">        Observable&lt;Integer&gt; o2 = Observable.fromIterable(list);</div><div class="line">        Observable&lt;Integer&gt; o3 = Observable.merge(o1, o2);</div></pre></td></tr></table></figure>
+<p>TODO: mergeDelayError！</p>
+<h4 id="join"><a href="#join" class="headerlink" title="join"></a>join</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Observable&lt;AppInfo&gt; o1 = Observable.interval(<span class="number">1000</span>, TimeUnit.MILLISECONDS)</div><div class="line">                .map(position -&gt; &#123;</div><div class="line">                    <span class="keyword">return</span> appInfos.get(position.intValue());</div><div class="line">                &#125;);</div><div class="line"></div><div class="line">        Observable&lt;Long&gt; o2 = Observable.interval(<span class="number">1000</span>, TimeUnit.MILLISECONDS);</div><div class="line">        o1.join(</div><div class="line">                o2,</div><div class="line">                appInfo -&gt; Observable.timer(<span class="number">2</span>, TimeUnit.SECONDS),</div><div class="line">                time -&gt; Observable.timer(<span class="number">0</span>, TimeUnit.SECONDS),</div><div class="line">                <span class="keyword">this</span>::createAppInfoLong);</div></pre></td></tr></table></figure>
+<p><img src="http://oseklscmm.bkt.clouddn.com/demon/rxjava/join.png" alt="join"><br>TODO: 细节及实际应用</p>
+<h4 id="zip"><a href="#zip" class="headerlink" title="zip"></a>zip</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Observable&lt;AppInfo&gt; o1 = Observable.fromIterable(appInfos);</div><div class="line">        Observable&lt;Integer&gt; o2 = Observable.fromIterable(list);</div><div class="line">        Observable&lt;AppInfo&gt; o3 = Observable</div><div class="line">                .zip(o1, o2, (AppInfo info, Integer i) -&gt; createAppInfo(info, i));</div><div class="line">        o3.subscribe(appInfo -&gt; Log.e(TAG, <span class="string">"zip: "</span> + appInfo.price));</div></pre></td></tr></table></figure>
+<h3 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h3><h4 id="五种调度器"><a href="#五种调度器" class="headerlink" title="五种调度器"></a>五种调度器</h4><h5 id="schedulers-io"><a href="#schedulers-io" class="headerlink" title="schedulers.io()"></a>schedulers.io()</h5><p>增长缩减自适应的线程池，大小没有限制。大量的io调度操作必占用内存。<br>并非RxJava专属，如普通实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Schedulers.io().createWorker().schedule(() -&gt; &#123;</div><div class="line">            <span class="comment">//执行io操作</span></div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<h5 id="schedulers-computation"><a href="#schedulers-computation" class="headerlink" title="schedulers.computation()"></a>schedulers.computation()</h5><p>于i/o无关，rxjava中计算默认的调度方式，包括buffer debounce interval delay sample skip等</p>
+<h5 id="schedulers-immediate"><a href="#schedulers-immediate" class="headerlink" title="schedulers.immediate()"></a>schedulers.immediate()</h5><p>立即执行。是timeout timerInterval timestap默认调度器。</p>
+<h5 id="schedulers-trampoline"><a href="#schedulers-trampoline" class="headerlink" title="schedulers.trampoline()"></a>schedulers.trampoline()</h5><p>队列。是repeat retry默认的调度器</p>
+<h5 id="schedulers-newThread"><a href="#schedulers-newThread" class="headerlink" title="schedulers.newThread()"></a>schedulers.newThread()</h5><p>新的线程</p>
+<h3 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续"></a>未完待续</h3><h4 id="拉取Flowable"><a href="#拉取Flowable" class="headerlink" title="拉取Flowable"></a>拉取Flowable</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line"><span class="comment">         * 没有s.request(2);则不会拉取 无异常</span></div><div class="line"><span class="comment">         * BackpressureStrategy的含义</span></div><div class="line"><span class="comment">         * 发送多余128个事件 不拉取没有任何异常</span></div><div class="line"><span class="comment">         */</span></div><div class="line">        Flowable&lt;Integer&gt; upSteam = Flowable.create(<span class="keyword">new</span> FlowableOnSubscribe&lt;Integer&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">subscribe</span><span class="params">(@NonNull FlowableEmitter&lt;Integer&gt; e)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                e.onNext(<span class="number">1</span>);</div><div class="line">                Log.e(TAG, <span class="string">"subscribe: "</span> + <span class="number">1</span>);</div><div class="line">                e.onNext(<span class="number">2</span>);</div><div class="line">                Log.e(TAG, <span class="string">"subscribe: "</span> + <span class="number">2</span>);</div><div class="line">                e.onNext(<span class="number">3</span>);</div><div class="line">                Log.e(TAG, <span class="string">"subscribe: "</span> + <span class="number">3</span>);</div><div class="line">                e.onNext(<span class="number">4</span>);</div><div class="line">                Log.e(TAG, <span class="string">"subscribe: "</span> + <span class="number">4</span>);</div><div class="line"></div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">200</span>; i++) &#123;</div><div class="line">                    e.onNext(i);</div><div class="line">                &#125;</div><div class="line">                e.onComplete();</div><div class="line">                Log.e(TAG, <span class="string">"subscribe: onComplete"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;, BackpressureStrategy.ERROR);</div><div class="line">        Subscriber&lt;Integer&gt; downStream = <span class="keyword">new</span> Subscriber&lt;Integer&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSubscribe</span><span class="params">(Subscription s)</span> </span>&#123;</div><div class="line"><span class="comment">//                        s.request(2);</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(Integer integer)</span> </span>&#123;</div><div class="line"></div><div class="line">                Log.e(TAG, <span class="string">"onNext: "</span> + integer);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable t)</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">        upSteam.subscribe(downStream);</div></pre></td></tr></table></figure>
+<p>Flowable也是一个被观察者，不同的是有观察者request拉取事件的功能<br>TODO: BackpressureStrategy.ERROR 不同的策略问题。</p>
+<h5 id="latest和drop的区别"><a href="#latest和drop的区别" class="headerlink" title="latest和drop的区别"></a>latest和drop的区别</h5><p><em>drop</em>之后单独request无反应<br>onSubscribe不request无反应</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"> Flowable.create(<span class="keyword">new</span> FlowableOnSubscribe&lt;Integer&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">subscribe</span><span class="params">(@NonNull FlowableEmitter&lt;Integer&gt; e)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</div><div class="line">                    e.onNext(i);</div><div class="line">                &#125;</div><div class="line"><span class="comment">//                e.onComplete();</span></div><div class="line">            &#125;</div><div class="line">        &#125;, BackpressureStrategy.DROP)</div><div class="line"><span class="comment">//                .subscribeOn(Schedulers.io())</span></div><div class="line"><span class="comment">//                .observeOn(AndroidSchedulers.mainThread())</span></div><div class="line">                .subscribe(<span class="keyword">new</span> Subscriber&lt;Integer&gt;() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSubscribe</span><span class="params">(Subscription s)</span> </span>&#123;</div><div class="line">                        subscription = s;</div><div class="line"><span class="comment">//                s.request(128);</span></div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(Integer integer)</span> </span>&#123;</div><div class="line">                        Log.e(TAG, <span class="string">"onNext: DROP"</span> + integer);</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable t)</span> </span>&#123;</div><div class="line"></div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">                    &#125;</div><div class="line">                &#125;);</div></pre></td></tr></table></figure>
+<p><em>latest</em><br>同一个线程 request得末位<br>不同线程 接受到多个事件 但是最后一位是末位  前面的是连续的 请求到的时间不一定是request的数量<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">Flowable.create(<span class="keyword">new</span> FlowableOnSubscribe&lt;Integer&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">subscribe</span><span class="params">(@NonNull FlowableEmitter&lt;Integer&gt; e)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</div><div class="line">                    e.onNext(i);</div><div class="line">                &#125;</div><div class="line"><span class="comment">//                e.onComplete();</span></div><div class="line">            &#125;</div><div class="line">        &#125;, BackpressureStrategy.LATEST)</div><div class="line">                .subscribeOn(Schedulers.io())</div><div class="line">                .observeOn(AndroidSchedulers.mainThread())</div><div class="line">                .subscribe(<span class="keyword">new</span> Subscriber&lt;Integer&gt;() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSubscribe</span><span class="params">(Subscription s)</span> </span>&#123;</div><div class="line">                        subscription = s;</div><div class="line"><span class="comment">//                s.request(100);</span></div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(Integer integer)</span> </span>&#123;</div><div class="line">                        Log.e(TAG, <span class="string">"onNext: LATEST"</span> + integer);</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable t)</span> </span>&#123;</div><div class="line"></div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">                    &#125;</div><div class="line">                &#125;);</div></pre></td></tr></table></figure></p>
+<h4 id="调度器的组合"><a href="#调度器的组合" class="headerlink" title="调度器的组合"></a>调度器的组合</h4><h4 id="背压策略"><a href="#背压策略" class="headerlink" title="背压策略"></a>背压策略</h4><h4 id="同步异步"><a href="#同步异步" class="headerlink" title="同步异步"></a>同步异步</h4><h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><blockquote><p>Be water ,my friend</p>
+<footer><strong>Bruce Lee</strong></footer></blockquote>
+<p><img src="http://oseklscmm.bkt.clouddn.com/demon/rxjava/water.jpg" alt="water"></p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017/07/01/iOS/" data-toggle="tooltip" data-placement="top" title="新手快速开发iOS项目">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/03/20/forfun/" data-toggle="tooltip" data-placement="top" title="一个练手项目">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#RxJava" title="RxJava">RxJava</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://blog.piasy.com/" target="_blank">piasy&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.zhaiyifan.cn/" target="_blank">markzhai&#39;s Blog</a></li>
+                    
+                        <li><a href="http://chiuki.github.io/" target="_blank">*魔王&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Bar</a></li>
+                    
+                        <li><a href="#" target="_blank">Example Friends</a></li>
+                    
+                        <li><a href="#" target="_blank">It helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "dagger2";
+    var disqus_identifier = "http://kaijun.rocks/hexo-theme-huxblog/2017/06/27/rxjava总结/";
+    var disqus_url = "http://kaijun.rocks/hexo-theme-huxblog/2017/06/27/rxjava总结/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/liuranlzz">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/lockingroad">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/刘冉图森破">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/ran.liu.50951">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lockingroad">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/ran-liu-a73244125">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Ran的代码笔记 2017 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://kaijun.rocks/hexo-theme-huxblog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="http://kaijun.rocks/hexo-theme-huxblog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

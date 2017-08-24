@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          Retrofit小结（一） - Demonl的博客 | Demonl&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://kaijun.rocks/hexo-theme-huxblog/2017/07/29/Retrofit1/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Ran的代码笔记</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http://kaijun.rocks/hexo-theme-huxblog/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('post-bg-js-module.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Retrofit" title="Retrofit">Retrofit</a>
+                        
+                          <a class="tag" href="/tags/#OkHttp" title="OkHttp">OkHttp</a>
+                        
+                    </div>
+                    <h1>Retrofit小结（一）</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Demonl on
+                        2017-07-29
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>Retrofit的一些基本用法，和少量源码。Retrofit的一些基本用法涉及OkHttp和Okio。</p>
+<a id="more"></a>
+<h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><h3 id="简单封装"><a href="#简单封装" class="headerlink" title="简单封装"></a>简单封装</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">API</span><span class="params">(HOST host)</span></span>&#123;</div><div class="line">        File cacheFile=<span class="keyword">new</span> File(RetrofitBlogApp.getAppContext().getCacheDir(),<span class="string">"cache"</span>);</div><div class="line">        Cache cache=<span class="keyword">new</span> Cache(cacheFile,<span class="number">1024</span>*<span class="number">1024</span>*<span class="number">100</span>);</div><div class="line">        Interceptor headerInterceptor=<span class="keyword">new</span> Interceptor() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> Response <span class="title">intercept</span><span class="params">(Chain chain)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">                Request build=chain.request().newBuilder()</div><div class="line">                        .addHeader(<span class="string">"Content-Type"</span>, <span class="string">"application/json"</span>)</div><div class="line">                        .build();</div><div class="line">                <span class="keyword">return</span> chain.proceed(build);</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        OkHttpClient okHttpClient=<span class="keyword">new</span> OkHttpClient.Builder()</div><div class="line">                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)</div><div class="line">                .connectTimeout(CONNECT_TIME_OUT,TimeUnit.MILLISECONDS)</div><div class="line"><span class="comment">//                .addInterceptor(mRewriteCacheInterceptor)</span></div><div class="line">                .addNetworkInterceptor(mRewriteCacheInterceptor)</div><div class="line">                .addInterceptor(headerInterceptor)</div><div class="line">                .cache(cache)</div><div class="line">                .build();</div><div class="line"></div><div class="line">        Gson gson = <span class="keyword">new</span> GsonBuilder().setDateFormat(<span class="string">"yyyy-MM-dd'T'HH:mm:ssZ"</span>).serializeNulls().create();</div><div class="line">        retrofit=<span class="keyword">new</span> Retrofit.Builder()</div><div class="line">                .client(okHttpClient)</div><div class="line">                .addConverterFactory(GsonConverterFactory.create(gson))</div><div class="line">                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())</div><div class="line">                .baseUrl(host.url)</div><div class="line">                .build();</div><div class="line">        apiService=retrofit.create(APIService.class);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="GET请求"><a href="#GET请求" class="headerlink" title="GET请求"></a>GET请求</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GET</span>(<span class="string">"/app/neahow/huibenapi/api1.0/homepage.php"</span>)</div><div class="line">    Observable&lt;BaseInfo&lt;SeriesInfo&gt;&gt; seriesInfo(<span class="meta">@Query</span>(<span class="string">"ac"</span>) String ac,</div><div class="line">                                                <span class="meta">@Query</span>(<span class="string">"functions"</span>) String functions,</div><div class="line">                                                <span class="meta">@Query</span>(<span class="string">"page"</span>) String page);</div></pre></td></tr></table></figure>
+<h3 id="POST请求"><a href="#POST请求" class="headerlink" title="POST请求"></a>POST请求</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@FormUrlEncoded</span></div><div class="line"><span class="meta">@POST</span>(<span class="string">"/app/neahow/huibenapi/api1.0/contents.php"</span>)</div><div class="line">Observable&lt;BaseEntity&lt;DetailEntity&gt;&gt;detailEntity(<span class="meta">@Query</span>(<span class="string">"ac"</span>) String ac,</div><div class="line">                                                 <span class="meta">@Field</span>(<span class="string">"id"</span>) String id);</div></pre></td></tr></table></figure>
+<p>一定要加入<code>@FormUrlEncoded</code></p>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GET</span>(<span class="string">"/app/neahow/huibenapi/api1.0/homepage.php"</span>)</div><div class="line">Observable&lt;BaseInfo&lt;SeriesInfo&gt;&gt;seriesInfoCache(</div><div class="line">                                                <span class="meta">@Header</span>(<span class="string">"Cache-Control"</span>)String cache,</div><div class="line">                                                <span class="meta">@Query</span>(<span class="string">"ac"</span>) String ac,</div><div class="line">                                                <span class="meta">@Query</span>(<span class="string">"functions"</span>) String functions,</div><div class="line">                                                <span class="meta">@Query</span>(<span class="string">"page"</span>) String page);</div></pre></td></tr></table></figure>
+<p>加入请求header的字段<br>有网：<code>private static final String CACHE_CONTROL_AGE=&quot;max-age=0&quot;;</code><br>无网：<code>private static final String CACHE_CONTROL_CACHE=&quot;only-if-cached, max-stale=&quot; + CACHE_STALE_SEC;</code></p>
+<h3 id="cookie"><a href="#cookie" class="headerlink" title="cookie"></a>cookie</h3><h3 id="上传图片"><a href="#上传图片" class="headerlink" title="上传图片"></a>上传图片</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@POST</span>(<span class="string">"/app/neahow/huibenapi/api1.0/homepage.php?ac=updateinfo"</span>)</div><div class="line">Observable&lt;BaseEntity&lt;String&gt;&gt;upAvatar1(<span class="meta">@Body</span> RequestBody body);</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">File file=<span class="keyword">new</span> File(path);</div><div class="line">        RequestBody requestBody= <span class="keyword">new</span> MultipartBody.Builder().setType(MultipartBody.FORM)</div><div class="line">                .addFormDataPart(<span class="string">"token"</span>,<span class="string">"+evEFd4mbG0bkuMFAHEbog=="</span>)</div><div class="line">                .addFormDataPart(<span class="string">"headimg"</span>, file.getName(), RequestBody.create(MediaType.parse(<span class="string">"image/jpeg"</span>), file))</div><div class="line">                .build();</div><div class="line"></div><div class="line"></div><div class="line">        API.getService(API.HOST.HUIBEN)</div><div class="line">                .upAvatar1(requestBody)</div><div class="line">                .compose(RxUtil.applySchedulers())</div><div class="line">                .subscribe(stringBaseEntity -&gt; Log.e(TAG, <span class="string">"accept: "</span>+stringBaseEntity.status));</div></pre></td></tr></table></figure>
+<p>TODO:多张图片的上传</p>
+<h2 id="okhttpclient"><a href="#okhttpclient" class="headerlink" title="okhttpclient"></a>okhttpclient</h2><h3 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h3><h4 id="Request格式"><a href="#Request格式" class="headerlink" title="Request格式"></a>Request格式</h4><ol>
+<li>请求行：请求类型 资源 协议版本</li>
+<li>请求头部 （HOST请求目的地 User-Agent）</li>
+<li>空行</li>
+<li>请求数据：post的内容</li>
+</ol>
+<p>客户端请求的时候，可以使用Accept字段声明自己可以接受哪些数据格式。</p>
+<p>GET请求</p>
+<blockquote>
+<p>GET /books/?sex=man&amp;name=Professional HTTP/1.1<br>Host: www.wrox.com<br>User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6)<br>Gecko/20050225 Firefox/1.0.1<br>Connection: Keep-Alive</p>
+</blockquote>
+<p>最后一个空行<br>get请求数据附在URL中 ？分割URL和传输数据，多个参数用&amp;连接</p>
+<p>POST请求</p>
+<blockquote>
+<p>POST / HTTP/1.1<br>Host: www.wrox.com<br>User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6)<br>Gecko/20050225 Firefox/1.0.1<br>Content-Type: application/x-www-form-urlencoded<br>Content-Length: 40<br>Connection: Keep-Alive<br>空行<br>name=Professional%20Ajax&amp;publisher=Wiley</p>
+</blockquote>
+<p>POST提交的数据放置在http包的包体中。POST的请求参数在http标题的不同部分传输（entity body）传输的，传输表单信息，必须添加<code>application/x-www-form- urlencoded</code>。</p>
+<h5 id="Response格式"><a href="#Response格式" class="headerlink" title="Response格式"></a>Response格式</h5><ol>
+<li>状态行：又http协议版本号 状态码 状态消息</li>
+<li>消息报头：</li>
+<li>空行</li>
+<li>响应正文</li>
+</ol>
+<p>MIME type在尾部使用分号，添加参数。</p>
+<blockquote>
+<p>Content-Type: text/html; charset=utf-8</p>
+</blockquote>
+<p>TODO: <em>递归名称解析</em> <em>迭代名称解析</em> <em>会话跟踪</em></p>
+<h3 id="OkHttp"><a href="#OkHttp" class="headerlink" title="OkHttp"></a>OkHttp</h3><h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>Post添加请求数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">RequestBody body=<span class="keyword">new</span> FormBody.Builder()</div><div class="line">                        .addEncoded(<span class="string">"id"</span>,<span class="string">"216"</span>)</div><div class="line">                        .build();</div></pre></td></tr></table></figure></p>
+<h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><p>call执行时候的核心代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">  <span class="function">Response <span class="title">getResponseWithInterceptorChain</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="comment">// Build a full stack of interceptors.</span></div><div class="line">    List&lt;Interceptor&gt; interceptors = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    interceptors.addAll(client.interceptors());</div><div class="line">    interceptors.add(retryAndFollowUpInterceptor);</div><div class="line">    interceptors.add(<span class="keyword">new</span> BridgeInterceptor(client.cookieJar()));</div><div class="line">    interceptors.add(<span class="keyword">new</span> CacheInterceptor(client.internalCache()));</div><div class="line">    interceptors.add(<span class="keyword">new</span> ConnectInterceptor(client));</div><div class="line">    <span class="keyword">if</span> (!forWebSocket) &#123;</div><div class="line">      interceptors.addAll(client.networkInterceptors());</div><div class="line">    &#125;</div><div class="line">    interceptors.add(<span class="keyword">new</span> CallServerInterceptor(forWebSocket));</div><div class="line"></div><div class="line">    Interceptor.Chain chain = <span class="keyword">new</span> RealInterceptorChain(</div><div class="line">        interceptors, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="number">0</span>, originalRequest);</div><div class="line">    <span class="keyword">return</span> chain.proceed(originalRequest);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<pre><code>1.    在配置 OkHttpClient 时设置的 interceptors；
+2.    负责失败重试以及重定向的 RetryAndFollowUpInterceptor；
+3.    负责把用户构造的请求转换为发送到服务器的请求、把服务器返回的响应转换为用户友好的响应的 BridgeInterceptor；
+4.    负责读取缓存直接返回、更新缓存的 CacheInterceptor；
+5.    负责和服务器建立连接的 ConnectInterceptor；
+6.    配置 OkHttpClient 时设置的 networkInterceptors；
+7.    负责向服务器发送请求数据、从服务器读取响应数据的 CallServerInterceptor。
+</code></pre><p>这是责任链模式，高级包装功能在上层，基础核心功能在下层<br><code>okhttp3.internal.connection.ConnectInterceptor</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> Response <span class="title">intercept</span><span class="params">(Chain chain)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">  RealInterceptorChain realChain = (RealInterceptorChain) chain;</div><div class="line">  Request request = realChain.request();</div><div class="line">  StreamAllocation streamAllocation = realChain.streamAllocation();</div><div class="line"></div><div class="line">  <span class="comment">// We need the network to satisfy this request. Possibly for validating a conditional GET.</span></div><div class="line">  <span class="keyword">boolean</span> doExtensiveHealthChecks = !request.method().equals(<span class="string">"GET"</span>);</div><div class="line">  HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);</div><div class="line">  RealConnection connection = streamAllocation.connection();</div><div class="line"></div><div class="line">  <span class="keyword">return</span> realChain.proceed(request, streamAllocation, httpCodec, connection);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>HttpCodec中利用okio对socket的读写操作进行封装</p>
+<p><code>okhttp3.internal.http.CallServerInterceptor</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> Response <span class="title">intercept</span><span class="params">(Chain chain)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">  RealInterceptorChain realChain = (RealInterceptorChain) chain;</div><div class="line">  HttpCodec httpCodec = realChain.httpStream();</div><div class="line">  StreamAllocation streamAllocation = realChain.streamAllocation();</div><div class="line">  RealConnection connection = (RealConnection) realChain.connection();</div><div class="line">  Request request = realChain.request();</div><div class="line"></div><div class="line">  <span class="keyword">long</span> sentRequestMillis = System.currentTimeMillis();</div><div class="line">  httpCodec.writeRequestHeaders(request);</div><div class="line"></div><div class="line">  Response.Builder responseBuilder = <span class="keyword">null</span>;</div><div class="line">  <span class="keyword">if</span> (HttpMethod.permitsRequestBody(request.method()) &amp;&amp; request.body() != <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="comment">// If there's a "Expect: 100-continue" header on the request, wait for a "HTTP/1.1 100</span></div><div class="line">    <span class="comment">// Continue" response before transmitting the request body. If we don't get that, return what</span></div><div class="line">    <span class="comment">// we did get (such as a 4xx response) without ever transmitting the request body.</span></div><div class="line">    <span class="keyword">if</span> (<span class="string">"100-continue"</span>.equalsIgnoreCase(request.header(<span class="string">"Expect"</span>))) &#123;</div><div class="line">      httpCodec.flushRequest();</div><div class="line">      responseBuilder = httpCodec.readResponseHeaders(<span class="keyword">true</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (responseBuilder == <span class="keyword">null</span>) &#123;</div><div class="line">      <span class="comment">// Write the request body if the "Expect: 100-continue" expectation was met.</span></div><div class="line">      Sink requestBodyOut = httpCodec.createRequestBody(request, request.body().contentLength());</div><div class="line">      BufferedSink bufferedRequestBody = Okio.buffer(requestBodyOut);</div><div class="line">      request.body().writeTo(bufferedRequestBody);</div><div class="line">      bufferedRequestBody.close();</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!connection.isMultiplexed()) &#123;</div><div class="line">      <span class="comment">// If the "Expect: 100-continue" expectation wasn't met, prevent the HTTP/1 connection from</span></div><div class="line">      <span class="comment">// being reused. Otherwise we're still obligated to transmit the request body to leave the</span></div><div class="line">      <span class="comment">// connection in a consistent state.</span></div><div class="line">      streamAllocation.noNewStreams();</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  httpCodec.finishRequest();</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (responseBuilder == <span class="keyword">null</span>) &#123;</div><div class="line">    responseBuilder = httpCodec.readResponseHeaders(<span class="keyword">false</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  Response response = responseBuilder</div><div class="line">      .request(request)</div><div class="line">      .handshake(streamAllocation.connection().handshake())</div><div class="line">      .sentRequestAtMillis(sentRequestMillis)</div><div class="line">      .receivedResponseAtMillis(System.currentTimeMillis())</div><div class="line">      .build();</div><div class="line"></div><div class="line">  <span class="keyword">int</span> code = response.code();</div><div class="line">  <span class="keyword">if</span> (forWebSocket &amp;&amp; code == <span class="number">101</span>) &#123;</div><div class="line">    <span class="comment">// Connection is upgrading, but we need to ensure interceptors see a non-null response body.</span></div><div class="line">    response = response.newBuilder()</div><div class="line">        .body(Util.EMPTY_RESPONSE)</div><div class="line">        .build();</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    response = response.newBuilder()</div><div class="line">        .body(httpCodec.openResponseBody(response))</div><div class="line">        .build();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (<span class="string">"close"</span>.equalsIgnoreCase(response.request().header(<span class="string">"Connection"</span>))</div><div class="line">      || <span class="string">"close"</span>.equalsIgnoreCase(response.header(<span class="string">"Connection"</span>))) &#123;</div><div class="line">    streamAllocation.noNewStreams();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> ((code == <span class="number">204</span> || code == <span class="number">205</span>) &amp;&amp; response.body().contentLength() &gt; <span class="number">0</span>) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> ProtocolException(</div><div class="line">        <span class="string">"HTTP "</span> + code + <span class="string">" had non-zero Content-Length: "</span> + response.body().contentLength());</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> response;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>TODO:CACHE</p>
+<h2 id="retrofit"><a href="#retrofit" class="headerlink" title="retrofit"></a>retrofit</h2><p>不缓存<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">38</span>:<span class="number">19.439</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: </div><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">38</span>:<span class="number">19.549</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: </div><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">38</span>:<span class="number">19.559</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: 有网</div><div class="line">                                                                              Server: nginx</div><div class="line">                                                                              Date: Fri, <span class="number">28</span> Jul <span class="number">2017</span> <span class="number">11</span>:<span class="number">38</span>:<span class="number">18</span> GMT</div><div class="line">                                                                              Content-Type: text/html;charset=utf-<span class="number">8</span></div><div class="line">                                                                              Transfer-Encoding: chunked</div><div class="line">                                                                              Connection: keep-alive</div><div class="line">                                                                              Vary: Accept-Encoding</div><div class="line">                                                                              X-Powered-By: PHP/<span class="number">5.6</span>.22</div><div class="line">                                                                              Content-Encoding: gzip</div><div class="line">                                                                              Cache-Control: </div><div class="line">                                                                              </div><div class="line">                                                                              Response&#123;protocol=http/<span class="number">1.1</span>, code=<span class="number">200</span>, message=OK, url=https:<span class="comment">//www.huibenabc.com/app/neahow/huibenapi/api1.0/homepage.php?ac=homepages&amp;functions=series&amp;page=0&#125;</span></div><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">38</span>:<span class="number">19.569</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: 有网</div><div class="line">                                                                              Server: nginx</div><div class="line">                                                                              Date: Fri, <span class="number">28</span> Jul <span class="number">2017</span> <span class="number">11</span>:<span class="number">38</span>:<span class="number">18</span> GMT</div><div class="line">                                                                              Content-Type: text/html;charset=utf-<span class="number">8</span></div><div class="line">                                                                              Transfer-Encoding: chunked</div><div class="line">                                                                              Connection: keep-alive</div><div class="line">                                                                              Vary: Accept-Encoding</div><div class="line">                                                                              X-Powered-By: PHP/<span class="number">5.6</span>.22</div><div class="line">                                                                              Cache-Control: </div><div class="line">                                                                              </div><div class="line">                                                                              Response&#123;protocol=http/<span class="number">1.1</span>, code=<span class="number">200</span>, message=OK, url=https:<span class="comment">//www.huibenabc.com/app/neahow/huibenapi/api1.0/homepage.php?ac=homepages&amp;functions=series&amp;page=0&#125;</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">40</span>:<span class="number">41.279</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: </div><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">40</span>:<span class="number">41.289</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: no-cache</div></pre></td></tr></table></figure>
+<p>缓存时<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">39</span>:<span class="number">25.499</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: max-age=<span class="number">0</span></div><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">39</span>:<span class="number">25.549</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: max-age=<span class="number">0</span></div><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">39</span>:<span class="number">25.609</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: 有网</div><div class="line">                                                                              Server: nginx</div><div class="line">                                                                              Date: Fri, <span class="number">28</span> Jul <span class="number">2017</span> <span class="number">11</span>:<span class="number">39</span>:<span class="number">24</span> GMT</div><div class="line">                                                                              Content-Type: text/html;charset=utf-<span class="number">8</span></div><div class="line">                                                                              Transfer-Encoding: chunked</div><div class="line">                                                                              Connection: keep-alive</div><div class="line">                                                                              Vary: Accept-Encoding</div><div class="line">                                                                              X-Powered-By: PHP/<span class="number">5.6</span>.22</div><div class="line">                                                                              Content-Encoding: gzip</div><div class="line">                                                                              Cache-Control: max-age=<span class="number">0</span></div><div class="line">                                                                              </div><div class="line">                                                                              Response&#123;protocol=http/<span class="number">1.1</span>, code=<span class="number">200</span>, message=OK, url=https:<span class="comment">//www.huibenabc.com/app/neahow/huibenapi/api1.0/homepage.php?ac=homepages&amp;functions=series&amp;page=0&#125;</span></div><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">39</span>:<span class="number">25.619</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: 有网</div><div class="line">                                                                              Server: nginx</div><div class="line">                                                                              Date: Fri, <span class="number">28</span> Jul <span class="number">2017</span> <span class="number">11</span>:<span class="number">39</span>:<span class="number">24</span> GMT</div><div class="line">                                                                              Content-Type: text/html;charset=utf-<span class="number">8</span></div><div class="line">                                                                              Transfer-Encoding: chunked</div><div class="line">                                                                              Connection: keep-alive</div><div class="line">                                                                              Vary: Accept-Encoding</div><div class="line">                                                                              X-Powered-By: PHP/<span class="number">5.6</span>.22</div><div class="line">                                                                              Cache-Control: max-age=<span class="number">0</span></div><div class="line">                                                                              </div><div class="line">                                                                              Response&#123;protocol=http/<span class="number">1.1</span>, code=<span class="number">200</span>, message=OK, url=https:<span class="comment">//www.huibenabc.com/app/neahow/huibenapi/api1.0/homepage.php?ac=homepages&amp;functions=series&amp;page=0&#125;</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">41</span>:<span class="number">08.929</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: only-<span class="keyword">if</span>-cached, max-stale=<span class="number">172800</span></div><div class="line"><span class="number">07</span>-<span class="number">28</span> <span class="number">19</span>:<span class="number">41</span>:<span class="number">08.949</span> <span class="number">6082</span>-<span class="number">11603</span>/com.huiben.app.retrofitblogdemo E/MainActivity: intercept: 无网</div><div class="line">                                                                              Server: nginx</div><div class="line">                                                                              Date: Fri, <span class="number">28</span> Jul <span class="number">2017</span> <span class="number">11</span>:<span class="number">39</span>:<span class="number">54</span> GMT</div><div class="line">                                                                              Content-Type: text/html;charset=utf-<span class="number">8</span></div><div class="line">                                                                              Transfer-Encoding: chunked</div><div class="line">                                                                              Connection: keep-alive</div><div class="line">                                                                              Vary: Accept-Encoding</div><div class="line">                                                                              X-Powered-By: PHP/<span class="number">5.6</span>.22</div><div class="line">                                                                              Warning: <span class="number">110</span> HttpURLConnection <span class="string">"Response is stale"</span></div><div class="line">                                                                              Cache-Control: <span class="keyword">public</span>, only-<span class="keyword">if</span>-cached, max-stale=<span class="number">172800</span></div><div class="line">                                                                              </div><div class="line">                                                                              Response&#123;protocol=http/<span class="number">1.1</span>, code=<span class="number">200</span>, message=OK, url=https:<span class="comment">//www.huibenabc.com/app/neahow/huibenapi/api1.0/homepage.php?ac=homepages&amp;functions=series&amp;page=0&#125;</span></div></pre></td></tr></table></figure>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/07/08/RxJava2/" data-toggle="tooltip" data-placement="top" title="RxJava的Rx有几种写法（应用篇）">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Retrofit" title="Retrofit">Retrofit</a>
+                        
+                          <a class="tag" href="/tags/#OkHttp" title="OkHttp">OkHttp</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://blog.piasy.com/" target="_blank">piasy&#39;s Blog</a></li>
+                    
+                        <li><a href="http://blog.zhaiyifan.cn/" target="_blank">markzhai&#39;s Blog</a></li>
+                    
+                        <li><a href="http://chiuki.github.io/" target="_blank">*魔王&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Bar</a></li>
+                    
+                        <li><a href="#" target="_blank">Example Friends</a></li>
+                    
+                        <li><a href="#" target="_blank">It helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "dagger2";
+    var disqus_identifier = "http://kaijun.rocks/hexo-theme-huxblog/2017/07/29/Retrofit1/";
+    var disqus_url = "http://kaijun.rocks/hexo-theme-huxblog/2017/07/29/Retrofit1/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/liuranlzz">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/lockingroad">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/刘冉图森破">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/ran.liu.50951">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lockingroad">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/ran-liu-a73244125">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Ran的代码笔记 2017 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://kaijun.rocks/hexo-theme-huxblog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="http://kaijun.rocks/hexo-theme-huxblog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
