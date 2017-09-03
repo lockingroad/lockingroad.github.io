@@ -13,11 +13,11 @@
 
     <title>
         
-          一个练手项目 - Demonl的博客 | Demonl&#39;s Blog
+          寻找鲁棒的结构——MovieGuide - Demonl的博客 | Demonl&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="demonliu.wang/2017/03/20/forfun/">
+    <link rel="canonical" href="demonliu.wang/2017/09/01/movie-guide/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -155,7 +155,7 @@
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
-        background-image: url('pathway.jpg')
+        background-image: url('/img/blue.jpg')
     }
 </style>
 <header class="intro-header" >
@@ -167,12 +167,14 @@
                         
                           <a class="tag" href="/tags/#RxJava" title="RxJava">RxJava</a>
                         
+                          <a class="tag" href="/tags/#Dagger2" title="Dagger2">Dagger2</a>
+                        
                     </div>
-                    <h1>一个练手项目</h1>
-                    <h2 class="subheading"></h2>
+                    <h1>寻找鲁棒的结构——MovieGuide</h1>
+                    <h2 class="subheading">MVP下的Dagger2的图结构</h2>
                     <span class="meta">
                         Posted by Demonl on
-                        2017-03-20
+                        2017-09-01
                     </span>
                 </div>
             </div>
@@ -191,21 +193,33 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>总结一下Android项目，有许多技术点支行复制粘贴，待挖掘后会一一补充完！<br>TODO :RxJava<br>TODO :Dagger</p>
+                <p><a href="https://github.com/esoxjem/MovieGuide" target="_blank" rel="external">MovieGuide-master</a><br>公共接口是一个电影api，需要申请一个key。</p>
+<blockquote>
+<p>tmdb_api_key=716e9b55af1d1585604f48a78d9d44ac</p>
+</blockquote>
 <a id="more"></a>
-<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><h3 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h3><p>BaseModel BaseView BasePresenter<br>列表类的操作都一样</p>
-<p>ListBaseModel<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ListBaseModel</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">BaseModel</span> </span>&#123;</div><div class="line">    Observable&lt;List&lt;T&gt;&gt;getList(String... params);</div><div class="line">    Observable&lt;T&gt;getEntity(String... params);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>ListBaseView<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ListBaseView</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">BaseView</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">refresh</span><span class="params">(List&lt;T&gt; list)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">load</span><span class="params">(List&lt;T&gt; list)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">err</span><span class="params">(String err)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">(List&lt;T&gt; list)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">loadComplete</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">scrollToTop</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>##框架</p>
-<h3 id="网络方面"><a href="#网络方面" class="headerlink" title="网络方面"></a>网络方面</h3><p><img src="http://upload-images.jianshu.io/upload_images/2482523-c66cf2cc3269ced9.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="net.PNG"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GET</span>(<span class="string">"data/福利/&#123;size&#125;/&#123;page&#125;"</span>)</div><div class="line">Observable&lt;BaseInfo&lt;BeautyInfo,String&gt;&gt;getBeautyList(</div><div class="line">        <span class="meta">@Header</span>(<span class="string">"Cache-Control"</span>) String cacheControl,</div><div class="line">        <span class="meta">@Path</span>(<span class="string">"size"</span>) <span class="keyword">int</span> size,</div><div class="line">        <span class="meta">@Path</span>(<span class="string">"page"</span>) <span class="keyword">int</span> page</div><div class="line">);</div></pre></td></tr></table></figure>
-<p>retrofit请求首部字段设置缓存</p>
-<h3 id="通信（观察者）"><a href="#通信（观察者）" class="headerlink" title="通信（观察者）"></a>通信（观察者）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RxManager</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> RxBus mRxBus = RxBus.getInstance();</div><div class="line">    <span class="comment">//管理rxbus订阅</span></div><div class="line">    <span class="keyword">private</span> Map&lt;String, Observable&lt;?&gt;&gt; mObservables = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    <span class="comment">/*管理Observables 和 Subscribers订阅*/</span></div><div class="line">    <span class="keyword">private</span> CompositeSubscription mCompositeSubscription = <span class="keyword">new</span> CompositeSubscription();</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * RxBus注入监听</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> eventName</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> action1</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">public</span> &lt;T&gt;<span class="function"><span class="keyword">void</span> <span class="title">on</span><span class="params">(String eventName, Action1&lt;T&gt; action1)</span> </span>&#123;</div><div class="line">        Observable&lt;T&gt; mObservable = mRxBus.register(eventName);</div><div class="line">        mObservables.put(eventName, mObservable);</div><div class="line">        <span class="comment">/*订阅管理*/</span></div><div class="line">        mCompositeSubscription.add(mObservable.observeOn(AndroidSchedulers.mainThread())</div><div class="line">                .subscribe(action1, <span class="keyword">new</span> Action1&lt;Throwable&gt;() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Throwable throwable)</span> </span>&#123;</div><div class="line">                        throwable.printStackTrace();</div><div class="line">                    &#125;</div><div class="line">                &#125;));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 单纯的Observables 和 Subscribers管理</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> m</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Subscription m)</span> </span>&#123;</div><div class="line">        <span class="comment">/*订阅管理*/</span></div><div class="line">        mCompositeSubscription.add(m);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 单个presenter生命周期结束，取消订阅和所有rxbus观察</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</div><div class="line">        mCompositeSubscription.unsubscribe();<span class="comment">// 取消所有订阅</span></div><div class="line">        <span class="keyword">for</span> (Map.Entry&lt;String, Observable&lt;?&gt;&gt; entry : mObservables.entrySet()) &#123;</div><div class="line">            mRxBus.unregister(entry.getKey(), entry.getValue());<span class="comment">// 移除rxbus观察</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//发送rxbus</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Object tag, Object content)</span> </span>&#123;</div><div class="line">        mRxBus.post(tag, content);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><h3 id="MD样式导航栏"><a href="#MD样式导航栏" class="headerlink" title="MD样式导航栏"></a>MD样式导航栏</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">compile <span class="string">'com.github.RoyWallace:BottomNavigationBar:v0.1'</span></div></pre></td></tr></table></figure>
-<h3 id="详情大图的查看"><a href="#详情大图的查看" class="headerlink" title="详情大图的查看"></a>详情大图的查看</h3><p>BeautyPhotoActivity</p>
-<h3 id="textview显示html内容"><a href="#textview显示html内容" class="headerlink" title="textview显示html内容"></a>textview显示html内容</h3><p>NewsDetailActivity</p>
-<h3 id="视频播放控件"><a href="#视频播放控件" class="headerlink" title="视频播放控件"></a>视频播放控件</h3><p>JCVideoPlayerStandard</p>
-<h3 id="朋友圈模块"><a href="#朋友圈模块" class="headerlink" title="朋友圈模块"></a>朋友圈模块</h3><h4 id="recyclerview坐标的监听、偏移等。"><a href="#recyclerview坐标的监听、偏移等。" class="headerlink" title="recyclerview坐标的监听、偏移等。"></a>recyclerview坐标的监听、偏移等。</h4><h4 id="点赞、评论、发布的数据处理逻辑"><a href="#点赞、评论、发布的数据处理逻辑" class="headerlink" title="点赞、评论、发布的数据处理逻辑"></a>点赞、评论、发布的数据处理逻辑</h4><h4 id="点赞FavortListView"><a href="#点赞FavortListView" class="headerlink" title="点赞FavortListView"></a>点赞FavortListView</h4><h4 id="评论CommentListView"><a href="#评论CommentListView" class="headerlink" title="评论CommentListView"></a>评论CommentListView</h4>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><h3 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h3><p>大致分为3部分</p>
+<ul>
+<li>MoviesListingFragment显示电影列表</li>
+<li>SortingDialogFragment菜单操作</li>
+<li>MovieDetailsFragment详情</li>
+</ul>
+<p><strong>MoviesListingFragment</strong><br>点击的动作在<code>MoviesListingActivity</code>中回调进行;<br>presenter和view的关联：moviesPresenter.setView(this);</p>
+<p><strong>SortingDialogFragment</strong><br>采用不同的排序策略;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sortingDialogPresenter.onPopularMoviesSelected();</div><div class="line">sortingDialogPresenter.onHighestRatedMoviesSelected();</div><div class="line">sortingDialogPresenter.onFavoritesSelected();</div></pre></td></tr></table></figure></p>
+<p>除了自己的presenter还共用的一个presenter。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> MoviesListingPresenter moviesListingPresenter;<span class="comment">//静态的presenter</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SortingDialogFragment <span class="title">newInstance</span><span class="params">(MoviesListingPresenter moviesListingPresenter)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    SortingDialogFragment.moviesListingPresenter = moviesListingPresenter;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> SortingDialogFragment();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>MovieDetailsFragment</strong><br>点击喜欢的电影<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">movieDetailsPresenter.onFavoriteClick(movie);</div></pre></td></tr></table></figure></p>
+<h3 id="dagger2"><a href="#dagger2" class="headerlink" title="dagger2"></a>dagger2</h3><p><img src="http://oseklscmm.bkt.clouddn.com/demon/movie/movieguider.svg" alt="movieguide-x"><br><a href="http://oseklscmm.bkt.clouddn.com/demon/movie/movieguider.svg" target="_blank" rel="external">点击</a><br>这是dagger2形成的图结构。</p>
+<ol>
+<li>矩形框Component</li>
+<li>椭圆框Module</li>
+<li>横线输出</li>
+<li>菱形输入</li>
+</ol>
+<p>MoviesListingFragment和SortingDialogFragment<br>注入的时候用的是<code>ListingComponent</code>，放入这个模块比较恰当，Component的分类应该体现一定的结构差异，以便管理维护，但是不宜分的太细。</p>
+<h2 id="可以借鉴的地方"><a href="#可以借鉴的地方" class="headerlink" title="可以借鉴的地方"></a>可以借鉴的地方</h2><ul>
+<li>[x] 项目中的model模块是Interactor，操作网络和本地数据。本地化的数据在Store中进行了封装，如<code>FavoritesStore</code>、<code>SortingOptionStore</code>。</li>
+</ul>
+
 
                 <hr>
 
@@ -213,13 +227,9 @@
 
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2017/06/27/rxjava总结/" data-toggle="tooltip" data-placement="top" title="RxJava的“Rx”有几种写法(基础篇)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2017/01/01/plan for six/" data-toggle="tooltip" data-placement="top" title="2017年的计划">Next Post &rarr;</a>
+                            <a href="/2017/08/26/booklist/" data-toggle="tooltip" data-placement="top" title="我的书单">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -253,6 +263,8 @@
                     <div class="tags">
                        
                           <a class="tag" href="/tags/#RxJava" title="RxJava">RxJava</a>
+                        
+                          <a class="tag" href="/tags/#Dagger2" title="Dagger2">Dagger2</a>
                         
                     </div>
                 </section>
@@ -292,8 +304,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "hexo-theme-huxblog";
-    var disqus_identifier = "demonliu.wang/2017/03/20/forfun/";
-    var disqus_url = "demonliu.wang/2017/03/20/forfun/";
+    var disqus_identifier = "demonliu.wang/2017/09/01/movie-guide/";
+    var disqus_url = "demonliu.wang/2017/09/01/movie-guide/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
