@@ -155,7 +155,7 @@
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
-        background-image: url('keyboard.jpg')
+        background-image: url('/img/keyboard.jpg')
     }
 </style>
 <header class="intro-header" >
@@ -169,7 +169,7 @@
                         
                     </div>
                     <h1>RxJava的Rx有几种写法（应用篇）</h1>
-                    <h2 class="subheading">RxJava的具体应用</h2>
+                    <h2 class="subheading">RxJavaの具体应用</h2>
                     <span class="meta">
                         Posted by Demonl on
                         2017-07-08
@@ -217,6 +217,20 @@
 <li>HashSet进行数据收集，用视频名字作为一致性检查来去重。</li>
 <li>转化为list（其实没什么用。。。）</li>
 </ol>
+<h3 id="实现发布订阅"><a href="#实现发布订阅" class="headerlink" title="实现发布订阅"></a>实现发布订阅</h3><p>用Rxjava实现发布订阅功能，来完成一些必要的通信。如此便可以舍弃掉EventBus之类的框架了。<br>单例<strong>RxBus</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Observable&lt;T&gt; <span class="title">register</span><span class="params">(@NonNull Object tag)</span> </span>&#123;</div><div class="line">    List&lt;Subject&gt; subjectList = subjectMapper.get(tag);</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> == subjectList) &#123;</div><div class="line">        subjectList = <span class="keyword">new</span> ArrayList&lt;Subject&gt;();</div><div class="line">        subjectMapper.put(tag,subjectList);<span class="comment">//1</span></div><div class="line">    &#125;</div><div class="line">    Subject&lt;T&gt; subject;</div><div class="line">    subjectList.add(subject = PublishSubject.create());</div><div class="line">    <span class="keyword">return</span> subject;</div><div class="line">&#125;</div><div class="line"></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">public</span> RxBus <span class="title">unregister</span><span class="params">(@NonNull Object tag,</span></span></div><div class="line"><span class="function"><span class="params">                        @NonNull Observable&lt;?&gt; observable)</span> </span>&#123;</div><div class="line">...    </div><div class="line">        subjects.remove(observable);</div><div class="line">        <span class="keyword">if</span> (isEmpty(subjects)) &#123;</div><div class="line">            subjectMapper.remove(tag);<span class="comment">//2</span></div><div class="line">        &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> getInstance();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(@NonNull Object tag, @NonNull Object content)</span> </span>&#123;</div><div class="line">    List&lt;Subject&gt; subjectList = subjectMapper.get(tag);</div><div class="line">   ...</div><div class="line">   <span class="keyword">for</span> (Subject subject : subjectList) &#123;<span class="comment">//3</span></div><div class="line">       subject.onNext(content);<span class="comment">//4</span></div><div class="line">   &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>subjectMapper的value是一个<code>Subject</code>的list，因为同一个tag会对应着多个订阅者。</li>
+<li>如果list中没有了<code>Subject</code>,便可以把这个tag去掉了。</li>
+<li>发送的时候，遍历所有的<code>Subject</code>。</li>
+<li>这个单例类，只进行了上游的操作。</li>
+</ol>
+<p>管理RxBus的<strong>RxManager</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> &lt;T&gt;<span class="function"><span class="keyword">void</span> <span class="title">on</span><span class="params">(String eventName, Consumer&lt;T&gt; action1)</span> </span>&#123;</div><div class="line">        Observable&lt;T&gt; mObservable = mRxBus.register(eventName);<span class="comment">//放入tag和subject链表并返回</span></div><div class="line">        mObservables.put(eventName, mObservable);<span class="comment">//1</span></div><div class="line">        mCompositeDisposable.add(mObservable.observeOn(AndroidSchedulers.mainThread())</div><div class="line">                .subscribe(action1, throwable -&gt; throwable.printStackTrace()));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</div><div class="line">   mCompositeDisposable.dispose();<span class="comment">// 2</span></div><div class="line">   <span class="keyword">for</span> (Map.Entry&lt;String,Observable&lt;?&gt;&gt;entry:mObservables.entrySet()) &#123;</div><div class="line">       mRxBus.unregister(entry.getKey(),entry.getValue());<span class="comment">// 3</span></div><div class="line">   &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Object tag, Object content)</span> </span>&#123;</div><div class="line">   mRxBus.post(tag, content);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>mObservables是Map<string,observable<?>&gt;，这里一个manager和一个activity或fragment对应。管理其中的订阅和发布，tag和事件是1对1的。</string,observable<?></li>
+<li>CompositeDisposable取消掉所有的事件。</li>
+<li>对应于RxBus中取消。</li>
+</ol>
+<p><img src="http://oseklscmm.bkt.clouddn.com/demon/rxjava/RxManager.svg" alt="RxManager"></p>
 <h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><h2 id="UI"><a href="#UI" class="headerlink" title="UI"></a>UI</h2>
 
                 <hr>
