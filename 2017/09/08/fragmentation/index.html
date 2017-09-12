@@ -13,11 +13,11 @@
 
     <title>
         
-          我的书单 - Demonl的博客 | Demonl&#39;s Blog
+          寻找鲁棒的结构——Fragmentation - Demonl的博客 | Demonl&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http://demonliu.wang/2017/08/26/booklist/">
+    <link rel="canonical" href="http://demonliu.wang/2017/09/08/fragmentation/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -165,14 +165,16 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                          <a class="tag" href="/tags/#book" title="book">book</a>
+                          <a class="tag" href="/tags/#Fragment" title="Fragment">Fragment</a>
+                        
+                          <a class="tag" href="/tags/#UI" title="UI">UI</a>
                         
                     </div>
-                    <h1>我的书单</h1>
-                    <h2 class="subheading">Hello Book!</h2>
+                    <h1>寻找鲁棒的结构——Fragmentation</h1>
+                    <h2 class="subheading">单activity多fragment结构</h2>
                     <span class="meta">
                         Posted by Demonl on
-                        2017-08-26
+                        2017-09-08
                     </span>
                 </div>
             </div>
@@ -192,40 +194,22 @@
                 post-container">
 
                 <blockquote>
-<p>抓紧时间读完的书，随时补充。</p>
+<p><a href="https://github.com/YoKeyword/Fragmentation/" target="_blank" rel="external">Fragmentation</a></p>
 </blockquote>
-<h2 id="计算机科学"><a href="#计算机科学" class="headerlink" title="计算机科学"></a>计算机科学</h2><ul>
-<li>计算机科学概论  <strong>(1)</strong></li>
-<li>图解http <strong>(1_20%)</strong></li>
-<li>图解TCPIP <strong>50%</strong></li>
-<li>图解网络硬件</li>
-<li>剑指offer</li>
-</ul>
-<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><ul>
-<li>深入理解java虚拟机 <strong>70%</strong></li>
-<li>effective java <strong>1</strong></li>
-<li>java数据结构和算法 <strong>60%</strong></li>
-<li>java并发编程艺术</li>
-<li>java程序性能优化</li>
-</ul>
-<h2 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h2><ul>
-<li>深入理解Android内核设计思想 <strong>70%</strong></li>
-<li>Android源码设计模式 <strong>1_10%</strong></li>
-<li>移动app性能评测与优化 </li>
-<li>Gradle for Android </li>
-<li>Android c++ 高级编程</li>
-<li>High Performance Android App</li>
-<li>Android Dalvik 虚拟机结构及机制剖析</li>
-<li>Pro Android Apps Performance Optimization</li>
-</ul>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
-<li>暗时间</li>
-</ul>
-<h2 id="去死吧"><a href="#去死吧" class="headerlink" title="去死吧!"></a>去死吧!</h2><ul>
-<li>SICP <strong>5%</strong></li>
-<li>CSAPP</li>
-<li>CLRS</li>
-</ul>
+<p>把项目重构为单activity的结构，界面的转场果然看起来更加顺滑。另外前后的对比可以作为内存测试的素材，发现了monitor的新天地！</p>
+<a id="more"></a>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><p>TODO</p>
+<h4 id="显示fragment"><a href="#显示fragment" class="headerlink" title="显示fragment"></a>显示fragment</h4><p> 关于fragment添加的内容都在TransactionDelegate的start中<br> start(…)@TransactionDelegate<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">(FragmentManager fragmentManager, <span class="keyword">final</span> ISupportFragment from, ISupportFragment to, String toFragmentTag,</span></span></div><div class="line"><span class="function"><span class="params">                      <span class="keyword">boolean</span> dontAddToBackStack, ArrayList&lt;TransactionRecord.SharedElement&gt; sharedElementList, <span class="keyword">boolean</span> allowRootFragmentAnim, <span class="keyword">int</span> type)</span> </span>&#123;<span class="comment">//1</span></div><div class="line">       FragmentTransaction ft = fragmentManager.beginTransaction();</div><div class="line">       <span class="keyword">boolean</span> addMode = (type == TYPE_ADD || type == TYPE_ADD_RESULT || type == TYPE_ADD_WITHOUT_HIDE);<span class="comment">//start启动 addMode为true</span></div><div class="line">       Fragment fromF = (Fragment) from;</div><div class="line">       Fragment toF = (Fragment) to;</div><div class="line">       Bundle args = getArguments(toF);</div><div class="line">       args.putBoolean(FRAGMENTATION_ARG_REPLACE, !addMode);<span class="comment">//2</span></div><div class="line"></div><div class="line">       <span class="keyword">if</span> (sharedElementList == <span class="keyword">null</span>) &#123;</div><div class="line">           <span class="keyword">if</span> (addMode) &#123; </div><div class="line">               TransactionRecord record = to.getSupportDelegate().mTransactionRecord;<span class="comment">//转场动画处理</span></div><div class="line">               ...</div><div class="line">           &#125; <span class="keyword">else</span> &#123;</div><div class="line">               args.putInt(FRAGMENTATION_ARG_ROOT_STATUS, SupportFragmentDelegate.STATUS_ROOT_ANIM_DISABLE);</div><div class="line">           &#125;</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           args.putBoolean(FRAGMENTATION_ARG_IS_SHARED_ELEMENT, <span class="keyword">true</span>);</div><div class="line">           <span class="keyword">for</span> (TransactionRecord.SharedElement item : sharedElementList) &#123;</div><div class="line">               ft.addSharedElement(item.sharedElement, item.sharedName);</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">if</span> (from == <span class="keyword">null</span>) &#123;<span class="comment">//3</span></div><div class="line">           ft.replace(args.getInt(FRAGMENTATION_ARG_CONTAINER), toF, toFragmentTag);<span class="comment">// supportactivity中load from为null 将会满足这个条件</span></div><div class="line">           <span class="keyword">if</span> (!addMode) &#123;</div><div class="line">               args.putInt(FRAGMENTATION_ARG_ROOT_STATUS, allowRootFragmentAnim ?</div><div class="line">                       SupportFragmentDelegate.STATUS_ROOT_ANIM_ENABLE : SupportFragmentDelegate.STATUS_ROOT_ANIM_DISABLE);</div><div class="line">           &#125;</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           <span class="keyword">if</span> (addMode) &#123;</div><div class="line">               ft.add(from.getSupportDelegate().mContainerId, toF, toFragmentTag);<span class="comment">//</span></div><div class="line">               <span class="keyword">if</span> (type != TYPE_ADD_WITHOUT_HIDE) &#123;<span class="comment">//除了 TYPE_ADD_WITHOUT_HIDE的标志 其他都会隐藏from(前一个)</span></div><div class="line">                   ft.hide(fromF);</div><div class="line">               &#125;</div><div class="line">           &#125; <span class="keyword">else</span> &#123;</div><div class="line">               ft.replace(from.getSupportDelegate().mContainerId, toF, toFragmentTag);</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="keyword">if</span> (!dontAddToBackStack &amp;&amp; type != TYPE_REPLACE_DONT_BACK) &#123;</div><div class="line">           ft.addToBackStack(toFragmentTag);</div><div class="line">       &#125;</div><div class="line">       supportCommit(fragmentManager, ft);</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>要做的任务有：处理动画、处理不用的添加方式、加入回退栈。<br>比如SupportActivity中的loadFragment</p>
+<ol>
+<li>type的值是TYPE_REPLACE，addMode为false </li>
+<li>这里是根fragment<code>shareElementList</code>为空，<code>addMode</code>为false，<code>from</code>为null。tag的为toFragment的classname</li>
+<li>ft.replace(args.getInt(FRAGMENTATION_ARG_CONTAINER), toF, toFragmentTag)是添加的关键语句。<h4 id="launchMode"><a href="#launchMode" class="headerlink" title="launchMode"></a>launchMode</h4>TODO<h4 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h4>TODO<h4 id="fragment间传值"><a href="#fragment间传值" class="headerlink" title="fragment间传值"></a>fragment间传值</h4></li>
+</ol>
+<p>从startForResult(StartFragment.newInstance(),1)@SupportFragment开始，最终进入TransactionDelegate中<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">saveRequestCode</span><span class="params">(Fragment to, <span class="keyword">int</span> requestCode)</span> </span>&#123;</div><div class="line">    Bundle bundle = getArguments(to);</div><div class="line">    ResultRecord resultRecord = <span class="keyword">new</span> ResultRecord();</div><div class="line">    resultRecord.requestCode = requestCode;</div><div class="line">    bundle.putParcelable(FRAGMENTATION_ARG_RESULT_RECORD, resultRecord);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>值得注意的是，bundle中根据特定key值设置进对应的resultRecord对象，作为信息的载体。resultRecord对象也有一个bundle的成员变量，相当于bundle的包装类，充分利用了bundle最为信息传输载体的特点。</p>
+<p>发送时的最终调用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFragmentResult</span><span class="params">(<span class="keyword">int</span> resultCode, Bundle bundle)</span> </span>&#123;</div><div class="line">    Bundle args = mFragment.getArguments();</div><div class="line">    <span class="keyword">if</span> (args == <span class="keyword">null</span> || !args.containsKey(TransactionDelegate.FRAGMENTATION_ARG_RESULT_RECORD)) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ResultRecord resultRecord = args.getParcelable(TransactionDelegate.FRAGMENTATION_ARG_RESULT_RECORD);</div><div class="line">    <span class="keyword">if</span> (resultRecord != <span class="keyword">null</span>) &#123;</div><div class="line">        resultRecord.resultCode = resultCode;</div><div class="line">        resultRecord.resultBundle = bundle;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>逻辑很简单，更改了信息，并不发送出去。而是等下层的fragment再次出现时会重新刷新——<code>onFragmentResult</code>中会得到调用。这里也根据bundle中包含的信息，进行了区分，不是setForResult启动的便不会刷新。</p>
 
 
                 <hr>
@@ -234,13 +218,9 @@
 
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2017/09/01/movie-guide/" data-toggle="tooltip" data-placement="top" title="寻找鲁棒的结构——MovieGuide">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2017/07/29/Retrofit1/" data-toggle="tooltip" data-placement="top" title="Retrofit小结（一）">Next Post &rarr;</a>
+                            <a href="/2017/09/01/movie-guide/" data-toggle="tooltip" data-placement="top" title="寻找鲁棒的结构——MovieGuide">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -273,7 +253,9 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#book" title="book">book</a>
+                          <a class="tag" href="/tags/#Fragment" title="Fragment">Fragment</a>
+                        
+                          <a class="tag" href="/tags/#UI" title="UI">UI</a>
                         
                     </div>
                 </section>
@@ -311,8 +293,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "demonliu";
-    var disqus_identifier = "http://demonliu.wang/2017/08/26/booklist/";
-    var disqus_url = "http://demonliu.wang/2017/08/26/booklist/";
+    var disqus_identifier = "http://demonliu.wang/2017/09/08/fragmentation/";
+    var disqus_url = "http://demonliu.wang/2017/09/08/fragmentation/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
