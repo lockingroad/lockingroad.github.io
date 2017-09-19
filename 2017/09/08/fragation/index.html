@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          寻找鲁棒的结构——Fragmentation - Demonl的博客 | Demonl&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://demonliu.wang/2017/09/08/fragation/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Demonl</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http://demonliu.wang/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/blue.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Fragment" title="Fragment">Fragment</a>
+                        
+                          <a class="tag" href="/tags/#UI" title="UI">UI</a>
+                        
+                    </div>
+                    <h1>寻找鲁棒的结构——Fragmentation</h1>
+                    <h2 class="subheading">单activity多fragment结构</h2>
+                    <span class="meta">
+                        Posted by Demonl on
+                        2017-09-08
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p><a href="https://github.com/YoKeyword/Fragmentation/" target="_blank" rel="external">Fragmentation</a></p>
+</blockquote>
+<p>把项目重构为单activity的结构，界面的转场果然看起来更加顺滑。另外前后的对比可以作为内存测试的素材，发现了monitor的新天地！</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><p><strong>FragmentationHack</strong>提供fm的一些属性:<code>isStateSaved</code>、<code>getActiveFragments</code>、<code>reorderIndices</code>、</p>
+<p>FragmentManagerImpl is not public in android.support.v4.app<br>这里要把final类hack出来。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">reorderIndices</span><span class="params">(FragmentManager fragmentManager)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (!sSupportLessThan25dot4) <span class="keyword">return</span>;</div><div class="line">        <span class="keyword">if</span> (!(fragmentManager <span class="keyword">instanceof</span> FragmentManagerImpl))</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            FragmentManagerImpl fragmentManagerImpl = (FragmentManagerImpl) fragmentManager;</div><div class="line">            Object object = getValue(fragmentManagerImpl, <span class="string">"mAvailIndices"</span>);</div><div class="line">            <span class="keyword">if</span> (object == <span class="keyword">null</span>) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">            ArrayList&lt;Integer&gt; arrayList = (ArrayList&lt;Integer&gt;) object;</div><div class="line">            <span class="keyword">if</span> (arrayList.size() &gt; <span class="number">1</span>) &#123;</div><div class="line">                Collections.sort(arrayList, Collections.reverseOrder());</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>得到FragmentManagerImpl的mAvailIndices域进行排序。（没找到。。。）</p>
+<h4 id="显示fragment"><a href="#显示fragment" class="headerlink" title="显示fragment"></a>显示fragment</h4><p> 关于fragment添加的内容都在TransactionDelegate的start中<br> start(…)@TransactionDelegate<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">(FragmentManager fragmentManager, <span class="keyword">final</span> ISupportFragment from, ISupportFragment to, String toFragmentTag,</span></span></div><div class="line"><span class="function"><span class="params">                      <span class="keyword">boolean</span> dontAddToBackStack, ArrayList&lt;TransactionRecord.SharedElement&gt; sharedElementList, <span class="keyword">boolean</span> allowRootFragmentAnim, <span class="keyword">int</span> type)</span> </span>&#123;<span class="comment">//1</span></div><div class="line">       FragmentTransaction ft = fragmentManager.beginTransaction();</div><div class="line">       <span class="keyword">boolean</span> addMode = (type == TYPE_ADD || type == TYPE_ADD_RESULT || type == TYPE_ADD_WITHOUT_HIDE);<span class="comment">//start启动 addMode为true</span></div><div class="line">       Fragment fromF = (Fragment) from;</div><div class="line">       Fragment toF = (Fragment) to;</div><div class="line">       Bundle args = getArguments(toF);</div><div class="line">       args.putBoolean(FRAGMENTATION_ARG_REPLACE, !addMode);<span class="comment">//2</span></div><div class="line"></div><div class="line">       <span class="keyword">if</span> (sharedElementList == <span class="keyword">null</span>) &#123;</div><div class="line">           <span class="keyword">if</span> (addMode) &#123; </div><div class="line">               TransactionRecord record = to.getSupportDelegate().mTransactionRecord;<span class="comment">//转场动画处理</span></div><div class="line">               ...</div><div class="line">           &#125; <span class="keyword">else</span> &#123;</div><div class="line">               args.putInt(FRAGMENTATION_ARG_ROOT_STATUS, SupportFragmentDelegate.STATUS_ROOT_ANIM_DISABLE);</div><div class="line">           &#125;</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           args.putBoolean(FRAGMENTATION_ARG_IS_SHARED_ELEMENT, <span class="keyword">true</span>);</div><div class="line">           <span class="keyword">for</span> (TransactionRecord.SharedElement item : sharedElementList) &#123;</div><div class="line">               ft.addSharedElement(item.sharedElement, item.sharedName);<span class="comment">//设置了过渡动画</span></div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">if</span> (from == <span class="keyword">null</span>) &#123;<span class="comment">//3</span></div><div class="line">           ft.replace(args.getInt(FRAGMENTATION_ARG_CONTAINER), toF, toFragmentTag);<span class="comment">// supportactivity中load from为null 将会满足这个条件</span></div><div class="line">           <span class="keyword">if</span> (!addMode) &#123;</div><div class="line">               args.putInt(FRAGMENTATION_ARG_ROOT_STATUS, allowRootFragmentAnim ?</div><div class="line">                       SupportFragmentDelegate.STATUS_ROOT_ANIM_ENABLE : SupportFragmentDelegate.STATUS_ROOT_ANIM_DISABLE);</div><div class="line">           &#125;</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           <span class="keyword">if</span> (addMode) &#123;</div><div class="line">               ft.add(from.getSupportDelegate().mContainerId, toF, toFragmentTag);<span class="comment">//</span></div><div class="line">               <span class="keyword">if</span> (type != TYPE_ADD_WITHOUT_HIDE) &#123;<span class="comment">//除了 TYPE_ADD_WITHOUT_HIDE的标志 其他都会隐藏from(前一个)</span></div><div class="line">                   ft.hide(fromF);</div><div class="line">               &#125;</div><div class="line">           &#125; <span class="keyword">else</span> &#123;</div><div class="line">               ft.replace(from.getSupportDelegate().mContainerId, toF, toFragmentTag);</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="keyword">if</span> (!dontAddToBackStack &amp;&amp; type != TYPE_REPLACE_DONT_BACK) &#123;</div><div class="line">           ft.addToBackStack(toFragmentTag);</div><div class="line">       &#125;</div><div class="line">       supportCommit(fragmentManager, ft);</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>要做的任务有：处理动画、处理不用的添加方式、加入回退栈。<br>比如SupportActivity中的loadFragment</p>
+<ol>
+<li>type的值是TYPE_REPLACE，addMode为false </li>
+<li>这里是根fragment<code>shareElementList</code>为空，<code>addMode</code>为false，<code>from</code>为null。tag的为toFragment的classname</li>
+<li>ft.replace(args.getInt(FRAGMENTATION_ARG_CONTAINER), toF, toFragmentTag)是添加的关键语句。</li>
+</ol>
+<h4 id="launchMode"><a href="#launchMode" class="headerlink" title="launchMode"></a>launchMode</h4><p>这里的launchMode和activity的launchMode有所不同,只是样式相似。没有不同的task和无穷无尽的flag。调用的是<code>dispatchStartTransaction</code><br>dispatchStartTransaction（…）@TransactionDelegate<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dispatchStartTransaction</span><span class="params">(FragmentManager fragmentManager, ISupportFragment from, ISupportFragment to, <span class="keyword">int</span> requestCode, <span class="keyword">int</span> launchMode, <span class="keyword">int</span> type)</span> </span>&#123;</div><div class="line">    ....<span class="comment">//初始化一些信息</span></div><div class="line">    String toFragmentTag = to.getClass().getName();</div><div class="line">    <span class="keyword">boolean</span> dontAddToBackStack = <span class="keyword">false</span>;</div><div class="line">    ....<span class="comment">//处理动画</span></div><div class="line">    <span class="keyword">if</span> (type == TYPE_ADD_RESULT) &#123;</div><div class="line">        saveRequestCode((Fragment) to, requestCode);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (handleLaunchMode(fragmentManager, from, to, toFragmentTag, launchMode)) <span class="keyword">return</span>;<span class="comment">////singleTop处理 怎样切换的界面，这里只是更新了bundle</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> (type == TYPE_ADD_WITH_POP) &#123;</div><div class="line">        startWithPop(fragmentManager, from, to);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        start(fragmentManager, from, to, toFragmentTag, dontAddToBackStack, sharedElementList, <span class="keyword">false</span>, type);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>初始化信息包括record、上一个fragment、container的id。进入关键步骤<code>handleLaunchMode</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">handleLaunchMode</span><span class="params">(FragmentManager fragmentManager, ISupportFragment topFragment, <span class="keyword">final</span> ISupportFragment to, String toFragmentTag, <span class="keyword">int</span> launchMode)</span> </span>&#123;</div><div class="line">    ...</div><div class="line">    <span class="keyword">if</span> (launchMode == ISupportFragment.SINGLETOP) &#123;</div><div class="line">        <span class="keyword">if</span> (to == topFragment || to.getClass().getName().equals(topFragment.getClass().getName())) &#123;</div><div class="line">            handleNewBundle(to, stackToFragment);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (launchMode == ISupportFragment.SINGLETASK) &#123;<span class="comment">//singleTask处理</span></div><div class="line">        popTo(toFragmentTag, <span class="keyword">false</span>, <span class="keyword">null</span>, fragmentManager, <span class="number">0</span>);</div><div class="line">        mHandler.post(<span class="keyword">new</span> Runnable() &#123;<span class="comment">//放入队列执行</span></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                handleNewBundle(to, stackToFragment);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;<span class="comment">//执行后面的步骤</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用的<code>handleNewBundle(to, stackToFragment)</code>作用和onNewIntent一样，进入不同于一般启动的回调。<br>SINGLETASK：<code>popTo(toFragmentTag, false, null, fragmentManager, 0)</code> 放入队列中执行。<br><code>TODO</code>: SINGLETOP</p>
+<h4 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h4><p>start(…)@TransactionDelegate<br>自定义动画</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">TransactionRecord record = to.getSupportDelegate().mTransactionRecord;</div><div class="line"><span class="keyword">if</span> (record != <span class="keyword">null</span> &amp;&amp; record.targetFragmentEnter != Integer.MIN_VALUE) &#123;</div><div class="line">    ft.setCustomAnimations(record.targetFragmentEnter, record.currentFragmentPopExit,</div><div class="line">            record.currentFragmentPopEnter, record.targetFragmentExit);</div><div class="line">    args.putInt(FRAGMENTATION_ARG_CUSTOM_END_ANIM, record.targetFragmentEnter);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="fragment间传值"><a href="#fragment间传值" class="headerlink" title="fragment间传值"></a>fragment间传值</h4><p>从startForResult(StartFragment.newInstance(),1)@SupportFragment开始，最终进入TransactionDelegate中<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">saveRequestCode</span><span class="params">(Fragment to, <span class="keyword">int</span> requestCode)</span> </span>&#123;</div><div class="line">    Bundle bundle = getArguments(to);</div><div class="line">    ResultRecord resultRecord = <span class="keyword">new</span> ResultRecord();</div><div class="line">    resultRecord.requestCode = requestCode;</div><div class="line">    bundle.putParcelable(FRAGMENTATION_ARG_RESULT_RECORD, resultRecord);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>值得注意的是，bundle中根据特定key值设置进对应的resultRecord对象，作为信息的载体。resultRecord对象也有一个bundle的成员变量，相当于bundle的包装类，充分利用了bundle作为信息传输载体的特点。</p>
+<p>发送时的最终调用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFragmentResult</span><span class="params">(<span class="keyword">int</span> resultCode, Bundle bundle)</span> </span>&#123;</div><div class="line">    Bundle args = mFragment.getArguments();</div><div class="line">    <span class="keyword">if</span> (args == <span class="keyword">null</span> || !args.containsKey(TransactionDelegate.FRAGMENTATION_ARG_RESULT_RECORD)) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ResultRecord resultRecord = args.getParcelable(TransactionDelegate.FRAGMENTATION_ARG_RESULT_RECORD);</div><div class="line">    <span class="keyword">if</span> (resultRecord != <span class="keyword">null</span>) &#123;</div><div class="line">        resultRecord.resultCode = resultCode;</div><div class="line">        resultRecord.resultBundle = bundle;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>逻辑很简单，更改了信息，并不发送出去。而是等下层的fragment再次出现时会重新刷新——<code>onFragmentResult</code>中会得到调用。这里也根据bundle中包含的信息，进行了区分，不是setForResult启动的便不会刷新。</p>
+<p>思路好乱啊，完全理不清，还是Fragment的准备工作没做好。忙完这段时间继续。。。<br>先看Fragment！<br>To be continued…</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017/09/15/javatips/" data-toggle="tooltip" data-placement="top" title="Java语法小tips">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/09/01/movie-guide/" data-toggle="tooltip" data-placement="top" title="寻找鲁棒的结构——MovieGuide">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Fragment" title="Fragment">Fragment</a>
+                        
+                          <a class="tag" href="/tags/#UI" title="UI">UI</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://blog.piasy.com/" target="_blank">Piasy</a></li>
+                    
+                        <li><a href="http://blog.zhaiyifan.cn/" target="_blank">markzhai</a></li>
+                    
+                        <li><a href="http://chiuki.github.io/" target="_blank">chiuki</a></li>
+                    
+                        <li><a href="http://wdxtub.com/" target="_blank">不周山</a></li>
+                    
+                        <li><a href="http://gityuan.com/" target="_blank">gityuan</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "demonliu";
+    var disqus_identifier = "http://demonliu.wang/2017/09/08/fragation/";
+    var disqus_url = "http://demonliu.wang/2017/09/08/fragation/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/lockingroad">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lockingroad">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/ran-liu-a73244125">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Demonl 2017 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://demonliu.wang/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="http://demonliu.wang/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
