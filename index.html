@@ -90,14 +90,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -314,7 +314,7 @@ Android源码设计......
         <div class="post-content-preview">
             Retrofit的一些基本用法，和少量源码。Retrofit的一些基本用法涉及OkHttp和Okio。
 
-基本操作简单封装12345678910111213141516171819202122232425262728293031    private API(HOST host)&#123;        File cacheFile=new File(RetrofitBlogApp.get......
+基本操作使用retrofit的入口是Retrofit.create(Service) 生成service对象，其中用到了动态代理。为甚吗用动态代理呢？因为对接口的所有方法都转发到了InvocationHander#invoke方法中，就可以集中处理了。create 方法最终调用12345......
         </div>
     </a>
     <p class="post-meta">
@@ -474,10 +474,6 @@ vuejs完不成了  okhttp看完了  （接下来看什么？）
                     <div class="tags">
                         
                             
-                            <a href="/tags/#book" title="book" rel="2">book</a>
-                            
-                        
-                            
                         
                             
                         
@@ -485,6 +481,8 @@ vuejs完不成了  okhttp看完了  （接下来看什么？）
                             <a href="/tags/#RxJava" title="RxJava" rel="4">RxJava</a>
                             
                         
+                            
+                            <a href="/tags/#book" title="book" rel="2">book</a>
                             
                         
                             
@@ -636,7 +634,7 @@ vuejs完不成了  okhttp看完了  （接下来看什么？）
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Demonl 2017 
+                    Copyright &copy; Demonl 2019 
                     <br>
                     Theme by <a href="http://huangxuan.me">Hux</a> 
                     <span style="display: inline-block; margin: 0 5px;">
